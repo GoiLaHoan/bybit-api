@@ -37,6 +37,7 @@ app.get('/trade', async (req, res) => {
         let priceSell = '9999'
         let equityUSDT = null
         let equitySell = null
+        let openOrder = []
 
         // Lấy số dư USDT ví UNIFIED
         await client
@@ -117,8 +118,73 @@ app.get('/trade', async (req, res) => {
             .catch((error) => {
                 console.error(error);
             });
+
+        async function placeSellOrder() {
+            await client
+                .submitOrder({
+                    category: 'spot',
+                    symbol,
+                    side: 'Sell',
+                    orderType: 'Limit',
+                    qty: equitySell,
+                    price: priceSell,
+                })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+
+        async function cancelAllOrders() {
+            await client
+                .cancelAllOrders({
+                    category: 'spot',
+                    settleCoin: 'USDT',
+                })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+
+        async function checkAndPlaceOrder() {
+            await client
+                .getActiveOrders({
+                    category: 'spot',
+                    symbol: symbol,
+                    openOnly: 0,
+                    limit: 1,
+                })
+                .then((response) => {
+                    openOrder = response?.result?.list;
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+
+            if (openOrder.length !== 0) {
+                await cancelAllOrders();
+                await placeSellOrder();
+            }
+        }
+
+        // Kiểm tra mỗi 5 giây
+        const intervalId = setInterval(async () => {
+            await checkAndPlaceOrder();
+
+            // Kiểm tra điều kiện dừng
+            if (openOrder.length === 0) {
+                clearInterval(intervalId);
+            }
+        }, 5000);
+
         // Return a success response
         res.json({ message: 'Trade executed successfully' });
+
     } catch (error) {
         // Return an error response
         res.status(500).json({ error: error.message });
