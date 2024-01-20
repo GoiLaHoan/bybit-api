@@ -228,7 +228,7 @@ app.get('/ruttien', async (req, res) => {
                 coin: 'USDT',
             })
             .then((response) => {
-                const equity = response.result.list[0].coin[0].equity; // số lượng usdt đang có trong ví UNIFIED
+                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng usdt đang có trong ví UNIFIED
 
                 equityUNIFIEDUSDT = String(convertFloat(equity))
             })
@@ -295,7 +295,7 @@ app.get('/ruttien', async (req, res) => {
             });
 
         // Return a success response
-        res.json({ message: 'Trade executed successfully' });
+        res.json({ message: 'Rut thanh cong' });
 
     } catch (error) {
         // Return an error response
