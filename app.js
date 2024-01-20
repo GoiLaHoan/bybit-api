@@ -220,16 +220,6 @@ app.get('/ruttien', async (req, res) => {
         let sotiencotherut = 0;
         let equityUNIFIEDUSDT = null;
 
-        await client
-            .getWithdrawableAmount({
-                coin: 'USDT',
-            })
-            .then((response) => {
-                sotiencotherut = response?.result?.withdrawableAmount?.FUND?.withdrawableAmount - 0.3;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
 
         // Lấy số dư USDT ví UNIFIED
         await client
@@ -277,7 +267,16 @@ app.get('/ruttien', async (req, res) => {
                 console.error(error);
             });
 
-
+        await client
+            .getWithdrawableAmount({
+                coin: 'USDT',
+            })
+            .then((response) => {
+                sotiencotherut = response?.result?.withdrawableAmount?.FUND?.withdrawableAmount - 0.3;
+            })
+            .catch((error) => {
+                console.error(error);
+            });
         await client
             .submitWithdrawal({
                 coin: 'USDT',
