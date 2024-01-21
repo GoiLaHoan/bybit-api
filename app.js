@@ -8,6 +8,17 @@ const app = express();
 // Use body-parser middleware to parse JSON
 app.use(bodyParser.json());
 
+app.set('trust proxy', true);
+
+app.get('/', (req, res) => {
+    return res.json({ message: 'Hello World!' });
+});
+
+app.get('/ipv4', (req, res) => {
+    const ipAddress = req.ip;
+    return res.json({ message: `Hello! Your IP address is: ${ipAddress}` });
+});
+
 function convertFloat(inputNumber) {
     const floatNumber = parseFloat(inputNumber);
 
