@@ -33,8 +33,6 @@ function convertFloat(inputNumber) {
 function getCurrentTimestamp() {
     return Date.now()
 }
-const transferId1 = uuidv4();
-const transferId2 = uuidv4();
 
 // Define the POST endpoint
 app.get('/trade', async (req, res) => {
@@ -226,9 +224,10 @@ app.get('/ruttien', async (req, res) => {
     });
 
     try {
-
         let sotiencotherut = 0;
         let equityUNIFIEDUSDT = null;
+        const transferId1 = uuidv4();
+        const transferId2 = uuidv4();
 
         // Lấy số dư USDT ví UNIFIED
         await client
@@ -243,6 +242,7 @@ app.get('/ruttien', async (req, res) => {
             .catch((error) => {
                 console.error(error);
             });
+
 
         // chuyen so tien co the rut sang funding
         await client
@@ -326,7 +326,7 @@ app.get('/ruttien', async (req, res) => {
     }
 });
 
-const PORT = 3000;
+const PORT = 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
