@@ -34,6 +34,11 @@ function getCurrentTimestamp() {
     return Date.now()
 }
 
+// Hàm sleep để chờ 1 giây
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // Define the POST endpoint
 app.get('/trade', async (req, res) => {
     const { coinName, API_KEY, API_SECRET } = req.query;
@@ -223,6 +228,8 @@ app.get('/ruttien', async (req, res) => {
         testnet: false,
     });
 
+
+
     try {
         let sotiencotherut = 0;
         let equityUNIFIEDUSDT = null;
@@ -243,6 +250,7 @@ app.get('/ruttien', async (req, res) => {
                 console.error(error);
             });
 
+        await sleep(1000); // Chờ 1 giây
 
         // chuyen so tien co the rut sang funding
         await client
@@ -260,6 +268,8 @@ app.get('/ruttien', async (req, res) => {
                 console.error(error);
             });
 
+        await sleep(2000); // Chờ 2 giây
+
         // chuyen 5$ sang giao ngay
         await client
             .createInternalTransfer(
@@ -275,6 +285,8 @@ app.get('/ruttien', async (req, res) => {
             .catch((error) => {
                 console.error(error);
             });
+
+        await sleep(2000); // Chờ 2 giây
 
         // 
         // client
@@ -298,6 +310,8 @@ app.get('/ruttien', async (req, res) => {
                 console.error(error);
             });
 
+        await sleep(1000); // Chờ 1 giây
+        
         if (sotiencotherut >= 0) {
             // rut tien
             await client
