@@ -50,7 +50,6 @@ app.get('/trade', async (req, res) => {
 
     // Call your trade function here passing the parameters from the request body
     try {
-
         let priceBuy = '0.01'
         let priceSell = '9999'
         let equityUSDT = null
@@ -231,7 +230,6 @@ app.get('/ruttien', async (req, res) => {
         let sotiencotherut = 0;
         let equityUNIFIEDUSDT = null;
 
-
         // Lấy số dư USDT ví UNIFIED
         await client
             .getWalletBalance({
@@ -240,14 +238,13 @@ app.get('/ruttien', async (req, res) => {
             })
             .then((response) => {
                 const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng usdt đang có trong ví UNIFIED
-
                 equityUNIFIEDUSDT = String(convertFloat(equity))
             })
             .catch((error) => {
                 console.error(error);
             });
 
-        // check xem vi unified xem co bao nhieu tien
+        // chuyen so tien co the rut sang funding
         await client
             .createInternalTransfer(
                 transferId1,
@@ -263,6 +260,7 @@ app.get('/ruttien', async (req, res) => {
                 console.error(error);
             });
 
+        // chuyen 5$ sang giao ngay
         await client
             .createInternalTransfer(
                 transferId2,
@@ -278,33 +276,47 @@ app.get('/ruttien', async (req, res) => {
                 console.error(error);
             });
 
+        // 
+        // client
+        //     .getCoinInfo('USDT')
+        //     .then((response) => {
+        //         console.log(response?.result?.rows[0]?.chains.find(item => item.chain === 'BSC').withdrawFee);
+        //     })
+        //     .catch((error) => {
+        //         console.error(error);
+        //     });
+
+        // kiem tra so tien co the rut
         await client
             .getWithdrawableAmount({
                 coin: 'USDT',
             })
             .then((response) => {
-                sotiencotherut = response?.result?.withdrawableAmount?.FUND?.withdrawableAmount - 0.3;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-        await client
-            .submitWithdrawal({
-                coin: 'USDT',
-                chain: 'BSC',
-                address: diachiruttien,
-                amount: String(sotiencotherut),
-                timestamp: getCurrentTimestamp(),
-                forceChain: 0,
-                accountType: 'FUND',
-            })
-            .then((response) => {
-                console.log(response);
+                sotiencotherut = Number(response?.result?.withdrawableAmount?.FUND?.withdrawableAmount) - 0.3;
             })
             .catch((error) => {
                 console.error(error);
             });
 
+        if (sotiencotherut >= 0) {
+            // rut tien
+            await client
+                .submitWithdrawal({
+                    coin: 'USDT',
+                    chain: 'BSC',
+                    address: diachiruttien,
+                    amount: convertFloat(sotiencotherut),
+                    timestamp: getCurrentTimestamp(),
+                    forceChain: 0,
+                    accountType: 'FUND',
+                })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
         // Return a success response
         res.json({ message: 'Rut thanh cong' });
 
@@ -314,7 +326,7 @@ app.get('/ruttien', async (req, res) => {
     }
 });
 
-const PORT = 8080;
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
