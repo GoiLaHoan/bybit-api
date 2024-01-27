@@ -83,7 +83,6 @@ app.get('/trade', async (req, res) => {
             })
             .then((response) => {
                 priceBuy = response.result.a[0][0]; // giá mua gần nhất
-                priceSell = response.result.b[0][0]; //giá bán gần nhất
             })
             .catch((error) => {
                 console.error(error);
@@ -117,6 +116,19 @@ app.get('/trade', async (req, res) => {
             .then((response) => {
                 const equity = response.result.list[0].coin[0].equity; // số lượng coin đang có trong ví
                 equitySell = String(convertFloat(equity))
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        // Lấy giá mua và giá bán gần nhất của đồng coin
+        await client
+            .getOrderbook({
+                category: 'spot',
+                symbol,
+            })
+            .then((response) => {
+                priceSell = response.result.b[0][0]; //giá bán gần nhất
             })
             .catch((error) => {
                 console.error(error);
@@ -195,7 +207,7 @@ app.get('/trade', async (req, res) => {
         let iterations = 0; // Initialize a counter variable
         const maxIterations = 3; // Set the maximum number of iterations
 
-        // Kiểm tra mỗi 2 giây
+        // Kiểm tra mỗi 1 giây
         const intervalId = setInterval(async () => {
             await checkAndPlaceOrder();
 
@@ -206,7 +218,7 @@ app.get('/trade', async (req, res) => {
             if (openOrder.length === 0 || iterations >= maxIterations) {
                 clearInterval(intervalId); // Dừng vòng lặp nếu đạt điều kiện
             }
-        }, 1000);
+        }, 500);
 
 
         // Return a success response
@@ -311,7 +323,7 @@ app.get('/ruttien', async (req, res) => {
             });
 
         await sleep(1000); // Chờ 1 giây
-        
+
         if (sotiencotherut >= 0) {
             // rut tien
             await client
@@ -340,7 +352,7 @@ app.get('/ruttien', async (req, res) => {
     }
 });
 
-const PORT = 8080;
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
