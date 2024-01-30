@@ -66,7 +66,7 @@ app.get('/trade', async (req, res) => {
                 coin: 'USDT',
             })
             .then((response) => {
-                const equity = response.result.list[0].coin[0].equity; // số lượng usdt đang có trong ví UNIFIED
+                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng usdt đang có trong ví UNIFIED
 
                 equityUSDT = String(convertFloat(equity))
             })
@@ -114,7 +114,7 @@ app.get('/trade', async (req, res) => {
                 coin: coinName,
             })
             .then((response) => {
-                const equity = response.result.list[0].coin[0].equity; // số lượng coin đang có trong ví
+                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng coin đang có trong ví
                 equitySell = String(convertFloat(equity))
             })
             .catch((error) => {
@@ -261,7 +261,7 @@ app.get('/trade2', async (req, res) => {
         //         coin: 'USDT',
         //     })
         //     .then((response) => {
-        //         const equity = response.result.list[0].coin[0].equity; // số lượng usdt đang có trong ví UNIFIED
+        //         const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng usdt đang có trong ví UNIFIED
 
         //         equityUSDT = String(convertFloat(equity))
         //     })
@@ -340,7 +340,7 @@ app.get('/trade2', async (req, res) => {
                 coin: coinName1,
             })
             .then((response) => {
-                const equity = response.result.list[0].coin[0].equity; // số lượng coin đang có trong ví
+                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng coin đang có trong ví
                 equitySell1 = String(convertFloat(equity))
             })
             .catch((error) => {
@@ -384,7 +384,7 @@ app.get('/trade2', async (req, res) => {
                 coin: coinName2,
             })
             .then((response) => {
-                const equity = response.result.list[0].coin[0].equity; // số lượng coin đang có trong ví
+                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng coin đang có trong ví
                 equitySell2 = String(convertFloat(equity))
             })
             .catch((error) => {
