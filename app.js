@@ -88,8 +88,6 @@ app.get('/trade', async (req, res) => {
                 console.error(error);
             });
 
-        console.log('priceBuy', priceBuy);
-
         // Mua giá gần nhất
         await client
             .submitOrder({
@@ -138,7 +136,6 @@ app.get('/trade', async (req, res) => {
                 console.error(error);
             });
 
-        console.log('priceSell', priceSell);
         // Bán giá gần nhất
         await client
             .submitOrder({
