@@ -41,7 +41,7 @@ function sleep(ms) {
 
 // Define the POST endpoint
 app.get('/trade', async (req, res) => {
-    const { coinName, API_KEY, API_SECRET } = req.query;
+    const { coinName, API_KEY, API_SECRET, sotienmua } = req.query;
     const symbol = `${coinName}USDT`;
 
     // Initialize RestClientV5 with provided credentials
@@ -96,7 +96,7 @@ app.get('/trade', async (req, res) => {
                 symbol,
                 side: 'Buy',
                 orderType: 'Limit',
-                qty: convertFloat(equityUSDT / priceBuy),
+                qty: sotienmua ? convertFloat(sotienmua / priceBuy) : convertFloat(equityUSDT / priceBuy),
                 price: priceBuy,
             })
             .then((response) => {
