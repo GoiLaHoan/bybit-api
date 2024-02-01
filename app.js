@@ -96,7 +96,7 @@ app.get('/trade', async (req, res) => {
                 symbol,
                 side: 'Buy',
                 orderType: 'Limit',
-                qty: convertFloat('3' / priceBuy),
+                qty: convertFloat(equityUSDT / priceBuy),
                 price: priceBuy,
             })
             .then((response) => {
