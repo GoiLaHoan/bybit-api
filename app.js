@@ -231,16 +231,6 @@ app.get('/trade', async (req, res) => {
 });
 
 const arrData = [
-    { apiKey: 'whg9Lp6RWsaEllzBpZ', secretKey: 'QDBtKNoe55MAxtL0LLOmdu5am1ESkcdpn5b6' },
-    { apiKey: 'SdCHr7s0r8mK8VQ6vV', secretKey: 'H8v8mbU8Ep3vwKAiF5FgLZLy9aHBUtWwa0FA' },
-    { apiKey: 'MZID18SqCsvJTXFTD3', secretKey: 'KLPVhsddmkEuvE6KmBZDAuUBNLUuw2WdOYD2' },
-    { apiKey: 'EyFkv4rDBdlYMiHbBV', secretKey: 'nrw5wcEVPc3dmUckYlcu8hBEf29Ah5DD5Nhs' },
-    { apiKey: 'uhFED0bfcALgRcFtgf', secretKey: 'hWPy2A4E7r5RBWGwLovSdVShMFtHNxi0raZ8' },
-    { apiKey: 'seTMBvPyFZdFAHSNts', secretKey: 'QZ89wRAw489AsvziIvbS2DabeIiF2qhs45fN' },
-    { apiKey: 'xwsJ4HF7pbedcS4Q6R', secretKey: 'HlBcL1xyNdYxhFhGLJ6UXluvkpij1M4zcTFp' },
-    { apiKey: 'pWDtoKBqmXPnYh4HRe', secretKey: 'b0wKmcc94a9fj9gwcnYMAL4leCgVHR8hkwiO' },
-    { apiKey: '6hRjX1wghSoXsH9fKn', secretKey: '51g4pwjeD6YT8Ed6RCCmMg89E3epwGkr429b' },
-    { apiKey: 'vzTqX5MhNxjQXPHWCK', secretKey: 'zvNjQ4cIMohrnRo2czqjcKpQYMvFrwnPsIin' },
     { apiKey: '6UkT2PaKJtbsba2BiB', secretKey: 'g5Eenaw3br41sFZ6t4tNTeht02slXqZpt3eg' },
     { apiKey: 'bCtzcQwDwxK5XDSvWN', secretKey: '5NwvV6aU3wgglQ9uJWp8C473M7ncGqyHkDce' },
     { apiKey: 'ASDXOp4TT8p7HwD5Kk', secretKey: 'zpguOGNC8sE23oKZHh2YMvSSuA84mEA8uWdb' },
@@ -251,8 +241,8 @@ const arrData = [
     { apiKey: 'YOSnzlV8vmNk1lTasr', secretKey: 's8F0aaQOrLcAPnd5c0zS67yqVx3O060I27as' },
     { apiKey: '5S4lmd2Bv0MbBPAAGK', secretKey: '4hk8PmG7JcYk98uEhLFx4EWEBBkH8xtbeniC' },
     { apiKey: 'XH4JpFK5M6Ai7tuEGB', secretKey: 'Ll6O8KnTdibnbMKILb0OXPPSs1mHLbGaoB81' }
-  ];
-  
+];
+
 
 // Define the POST endpoint
 app.get('/tradeHuy', async (req, res) => {
@@ -265,14 +255,14 @@ app.get('/tradeHuy', async (req, res) => {
             secret: secretKey,
             testnet: false,
         });
-    
-    
+
+
         let priceBuy = '0.01'
         let priceSell = '9999'
         let equityUSDT = null
         let equitySell = null
         let openOrder = []
-    
+
         // Lấy số dư USDT ví UNIFIED
         await client
             .getWalletBalance({
@@ -281,14 +271,14 @@ app.get('/tradeHuy', async (req, res) => {
             })
             .then((response) => {
                 const equity = response.result.list[0].coin[0].equity; // số lượng usdt đang có trong ví UNIFIED
-    
+
                 equityUSDT = String(convertFloat(equity))
             })
             .catch((error) => {
                 console.error(error);
             });
-    
-    
+
+
         // Lấy giá mua và giá bán gần nhất của đồng coin
         await client
             .getOrderbook({
@@ -301,8 +291,8 @@ app.get('/tradeHuy', async (req, res) => {
             .catch((error) => {
                 console.error(error);
             });
-    
-    
+
+
         // Mua giá gần nhất
         await client
             .submitOrder({
@@ -319,8 +309,8 @@ app.get('/tradeHuy', async (req, res) => {
             .catch((error) => {
                 console.error(error);
             });
-    
-    
+
+
         // Check coin đã có trong ví chưa
         await client
             .getWalletBalance({
@@ -334,7 +324,7 @@ app.get('/tradeHuy', async (req, res) => {
             .catch((error) => {
                 console.error(error);
             });
-    
+
         // Lấy giá mua và giá bán gần nhất của đồng coin
         await client
             .getOrderbook({
@@ -347,7 +337,7 @@ app.get('/tradeHuy', async (req, res) => {
             .catch((error) => {
                 console.error(error);
             });
-    
+
         // Bán giá gần nhất
         await client
             .submitOrder({
@@ -364,7 +354,7 @@ app.get('/tradeHuy', async (req, res) => {
             .catch((error) => {
                 console.error(error);
             });
-    
+
         async function placeSellOrder() {
             await client
                 .submitOrder({
@@ -382,7 +372,7 @@ app.get('/tradeHuy', async (req, res) => {
                     console.error(error);
                 });
         }
-    
+
         async function cancelAllOrders() {
             await client
                 .cancelAllOrders({
@@ -396,7 +386,7 @@ app.get('/tradeHuy', async (req, res) => {
                     console.error(error);
                 });
         }
-    
+
         async function checkAndPlaceOrder() {
             await client
                 .getActiveOrders({
@@ -411,23 +401,23 @@ app.get('/tradeHuy', async (req, res) => {
                 .catch((error) => {
                     console.error(error);
                 });
-    
+
             if (openOrder.length !== 0) {
                 await cancelAllOrders();
                 await placeSellOrder();
             }
         }
-    
+
         let iterations = 0; // Initialize a counter variable
         const maxIterations = 3; // Set the maximum number of iterations
-    
+
         // Kiểm tra mỗi 1 giây
         const intervalId = setInterval(async () => {
             await checkAndPlaceOrder();
-    
+
             // Tăng biến đếm sau mỗi lần lặp
             iterations++;
-    
+
             // Kiểm tra điều kiện dừng
             if (openOrder.length === 0 || iterations >= maxIterations) {
                 clearInterval(intervalId); // Dừng vòng lặp nếu đạt điều kiện
@@ -440,7 +430,7 @@ app.get('/tradeHuy', async (req, res) => {
     });
 
     res.json({ message: 'Trade executed successfully' });
-    
+
 });
 
 
