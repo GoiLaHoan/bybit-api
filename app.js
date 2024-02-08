@@ -433,6 +433,240 @@ app.get('/tradeHuy', async (req, res) => {
 
 });
 
+// Define the POST endpoint
+app.get('/sellcoin', async (req, res) => {
+    const { coinName, API_KEY, API_SECRET } = req.query;
+    const symbol = `${coinName}USDT`;
+
+    // Initialize RestClientV5 with provided credentials
+    const client = new RestClientV5({
+        key: API_KEY,
+        secret: API_SECRET,
+        testnet: false,
+    });
+
+    // Call your trade function here passing the parameters from the request body
+    try {
+        let priceSell = '9999'
+        let equitySell = null
+        let equityUNIFIEDUSDT = null;
+
+        let qtyCoin = '0'
+        const transferId1 = uuidv4();
+        const transferId2 = uuidv4();
+
+        await client
+            .getAllCoinsBalance({ accountType: 'FUND', coin: coinName })
+            .then((response) => {
+                console.log('response', response.result.balance[0].transferBalance);
+                qtyCoin = String(response.result.balance[0].transferBalance)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        // chuyen so tien co the rut sang UNIFIED
+        await client
+            .createInternalTransfer(
+                transferId1,
+                coinName,
+                qtyCoin,
+                'FUND',
+                'UNIFIED',
+            )
+            .then((response) => {
+                console.log('response', response);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        // Check coin đã có trong ví chưa
+        await client
+            .getWalletBalance({
+                accountType: 'UNIFIED',
+                coin: coinName,
+            })
+            .then((response) => {
+                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng coin đang có trong ví
+                equitySell = String(convertFloat(equity))
+                console.log('equity', equity);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        // Lấy giá mua và giá bán gần nhất của đồng coin
+        await client
+            .getOrderbook({
+                category: 'spot',
+                symbol,
+            })
+            .then((response) => {
+                priceSell = response.result.b[0][0]; //giá bán gần nhất
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        // Bán giá gần nhất
+        await client
+            .submitOrder({
+                category: 'spot',
+                symbol,
+                side: 'Sell',
+                orderType: 'Limit',
+                qty: equitySell, // bán hết
+                price: priceSell,
+            })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        await sleep(1000); // Chờ 1 giây
+
+        // Lấy số dư USDT ví UNIFIED
+        await client
+            .getWalletBalance({
+                accountType: 'UNIFIED',
+                coin: 'USDT',
+            })
+            .then((response) => {
+                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng usdt đang có trong ví UNIFIED
+                equityUNIFIEDUSDT = String(convertFloat(equity))
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        await sleep(1000); // Chờ 1 giây
+
+        // chuyen so tien co the rut sang funding
+        await client
+            .createInternalTransfer(
+                transferId2,
+                'USDT',
+                equityUNIFIEDUSDT,
+                'UNIFIED',
+                'FUND',
+            )
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        // Return a success response
+        res.json({ message: 'Trade executed successfully' });
+
+    } catch (error) {
+        // Return an error response
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/sellcoinold', async (req, res) => {
+    const { coinName, API_KEY, API_SECRET } = req.query;
+    const symbol = `${coinName}USDT`;
+
+    // Initialize RestClientV5 with provided credentials
+    const client = new RestClientV5({
+        key: API_KEY,
+        secret: API_SECRET,
+        testnet: false,
+    });
+
+    // Call your trade function here passing the parameters from the request body
+    try {
+        let priceSell = '9999'
+        let equitySell = null
+
+        let qtyCoin = '0'
+        const transferId1 = uuidv4();
+
+        await client
+            .getAllCoinsBalance({ accountType: 'FUND', coin: coinName })
+            .then((response) => {
+                console.log('response', response.result.balance[0].transferBalance);
+                qtyCoin = String(response.result.balance[0].transferBalance)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        // chuyen so tien co the rut sang UNIFIED
+        await client
+            .createInternalTransfer(
+                transferId1,
+                coinName,
+                qtyCoin,
+                'FUND',
+                'UNIFIED',
+            )
+            .then((response) => {
+                console.log('response', response);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        // Check coin đã có trong ví chưa
+        await client
+            .getWalletBalance({
+                accountType: 'UNIFIED',
+                coin: coinName,
+            })
+            .then((response) => {
+                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng coin đang có trong ví
+                equitySell = String(convertFloat(equity))
+                console.log('equity', equity);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        // Lấy giá mua và giá bán gần nhất của đồng coin
+        await client
+            .getOrderbook({
+                category: 'spot',
+                symbol,
+            })
+            .then((response) => {
+                priceSell = response.result.b[0][0]; //giá bán gần nhất
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        // Bán giá gần nhất
+        await client
+            .submitOrder({
+                category: 'spot',
+                symbol,
+                side: 'Sell',
+                orderType: 'Limit',
+                qty: equitySell, // bán hết
+                price: priceSell,
+            })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        // Return a success response
+        res.json({ message: 'Trade executed successfully' });
+
+    } catch (error) {
+        // Return an error response
+        res.status(500).json({ error: error.message });
+    }
+});
 
 app.get('/trade2', async (req, res) => {
     const { coinName1, coinName2, API_KEY, API_SECRET } = req.query;
