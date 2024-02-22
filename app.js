@@ -1427,7 +1427,7 @@ app.get('/tradeLoopMul', async (req, res) => {
             }
         }
 
-        await sleep(200); // Chờ 1 giây
+        // await sleep(200); // Chờ 1 giây
         await checkAndCancelAllOrders();
     }
     // loop
