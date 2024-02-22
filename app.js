@@ -230,22 +230,22 @@ app.get('/trade', async (req, res) => {
     }
 });
 
-// const arrData = [
-//     { apiKey: '6UkT2PaKJtbsba2BiB', secretKey: 'g5Eenaw3br41sFZ6t4tNTeht02slXqZpt3eg' },
-//     { apiKey: 'bCtzcQwDwxK5XDSvWN', secretKey: '5NwvV6aU3wgglQ9uJWp8C473M7ncGqyHkDce' },
-//     { apiKey: 'ASDXOp4TT8p7HwD5Kk', secretKey: 'zpguOGNC8sE23oKZHh2YMvSSuA84mEA8uWdb' },
-//     { apiKey: 'b8PDTwkByQvuULtbCz', secretKey: '5itzUOergKoQRbGWAWeF9XrxEwPtZpVlF3qK' },
-//     { apiKey: 'A5mCHigKIVfQQ6IcTh', secretKey: 'ue4kJP9INHh3O9oOSKzOCZG4FWjMKIktbCfy' },
-//     { apiKey: 'zBsXqax2KgyQLFssQF', secretKey: 'zyWqRdUveUk6tvcbrNIiCS39V3Ojkh69SsOp' },
-//     { apiKey: 'uesUi3Eu9nhhK6TkJE', secretKey: 'elaQO0BeN2DXkdLzaAvg1MtF6Pz6PipAdAbk' },
-//     { apiKey: 'YOSnzlV8vmNk1lTasr', secretKey: 's8F0aaQOrLcAPnd5c0zS67yqVx3O060I27as' },
-//     { apiKey: '5S4lmd2Bv0MbBPAAGK', secretKey: '4hk8PmG7JcYk98uEhLFx4EWEBBkH8xtbeniC' },
-//     { apiKey: 'XH4JpFK5M6Ai7tuEGB', secretKey: 'Ll6O8KnTdibnbMKILb0OXPPSs1mHLbGaoB81' }
-// ];
 const arrData = [
-    { apiKey: 'F6eVj1cJQruiuAn4mg', secretKey: 'MKTGRdWVPmfbbF8CEEm0kkZ10Ox4VvIcY2oI' },
-    { apiKey: '480swT3YuT7OKKs5YY', secretKey: '6K2oqEFCIJwg9nCxYtIVtNYbbYoreiRvtdgM' },
+    { apiKey: '6UkT2PaKJtbsba2BiB', secretKey: 'g5Eenaw3br41sFZ6t4tNTeht02slXqZpt3eg' },
+    { apiKey: 'bCtzcQwDwxK5XDSvWN', secretKey: '5NwvV6aU3wgglQ9uJWp8C473M7ncGqyHkDce' },
+    { apiKey: 'ASDXOp4TT8p7HwD5Kk', secretKey: 'zpguOGNC8sE23oKZHh2YMvSSuA84mEA8uWdb' },
+    { apiKey: 'b8PDTwkByQvuULtbCz', secretKey: '5itzUOergKoQRbGWAWeF9XrxEwPtZpVlF3qK' },
+    { apiKey: 'A5mCHigKIVfQQ6IcTh', secretKey: 'ue4kJP9INHh3O9oOSKzOCZG4FWjMKIktbCfy' },
+    { apiKey: 'zBsXqax2KgyQLFssQF', secretKey: 'zyWqRdUveUk6tvcbrNIiCS39V3Ojkh69SsOp' },
+    { apiKey: 'uesUi3Eu9nhhK6TkJE', secretKey: 'elaQO0BeN2DXkdLzaAvg1MtF6Pz6PipAdAbk' },
+    { apiKey: 'YOSnzlV8vmNk1lTasr', secretKey: 's8F0aaQOrLcAPnd5c0zS67yqVx3O060I27as' },
+    { apiKey: '5S4lmd2Bv0MbBPAAGK', secretKey: '4hk8PmG7JcYk98uEhLFx4EWEBBkH8xtbeniC' },
+    { apiKey: 'XH4JpFK5M6Ai7tuEGB', secretKey: 'Ll6O8KnTdibnbMKILb0OXPPSs1mHLbGaoB81' }
 ];
+// const arrData = [
+//     { apiKey: 'F6eVj1cJQruiuAn4mg', secretKey: 'MKTGRdWVPmfbbF8CEEm0kkZ10Ox4VvIcY2oI' },
+//     { apiKey: '480swT3YuT7OKKs5YY', secretKey: '6K2oqEFCIJwg9nCxYtIVtNYbbYoreiRvtdgM' },
+// ];
 
 // Define the POST endpoint
 app.get('/tradeHuy', async (req, res) => {
@@ -1427,7 +1427,7 @@ app.get('/tradeLoopMul', async (req, res) => {
             }
         }
 
-        await sleep(1000); // Chờ 1 giây
+        await sleep(200); // Chờ 1 giây
         await checkAndCancelAllOrders();
     }
     // loop
