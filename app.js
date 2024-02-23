@@ -43,6 +43,7 @@ function sleep(ms) {
 app.get('/trade', async (req, res) => {
     const { coinName, API_KEY, API_SECRET, sotienmua } = req.query;
     const symbol = `${coinName}USDT`;
+    let isContinue = true;
 
     // Initialize RestClientV5 with provided credentials
     const client = new RestClientV5({
@@ -52,7 +53,8 @@ app.get('/trade', async (req, res) => {
     });
 
     // Call your trade function here passing the parameters from the request body
-    try {
+
+    const trade = async () => {
         let priceBuy = '0.01'
         let priceSell = '9999'
         let equityUSDT = null
@@ -151,24 +153,6 @@ app.get('/trade', async (req, res) => {
                 console.error(error);
             });
 
-        async function placeSellOrder() {
-            await client
-                .submitOrder({
-                    category: 'spot',
-                    symbol,
-                    side: 'Sell',
-                    orderType: 'Limit',
-                    qty: equitySell,
-                    price: priceSell,
-                })
-                .then((response) => {
-                    console.log(response);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
-
         async function cancelAllOrders() {
             await client
                 .cancelAllOrders({
@@ -183,7 +167,7 @@ app.get('/trade', async (req, res) => {
                 });
         }
 
-        async function checkAndPlaceOrder() {
+        async function checkAndCancelAllOrders() {
             await client
                 .getActiveOrders({
                     category: 'spot',
@@ -200,34 +184,46 @@ app.get('/trade', async (req, res) => {
 
             if (openOrder.length !== 0) {
                 await cancelAllOrders();
-                await placeSellOrder();
+                // await placeSellOrder();
             }
         }
 
-        let iterations = 0; // Initialize a counter variable
-        const maxIterations = 3; // Set the maximum number of iterations
-
-        // Kiểm tra mỗi 1 giây
-        const intervalId = setInterval(async () => {
-            await checkAndPlaceOrder();
-
-            // Tăng biến đếm sau mỗi lần lặp
-            iterations++;
-
-            // Kiểm tra điều kiện dừng
-            if (openOrder.length === 0 || iterations >= maxIterations) {
-                clearInterval(intervalId); // Dừng vòng lặp nếu đạt điều kiện
-            }
-        }, 500);
-
-
-        // Return a success response
-        res.json({ message: 'Trade executed successfully' });
-
-    } catch (error) {
-        // Return an error response
-        res.status(500).json({ error: error.message });
+        // await sleep(200); // Chờ 1 giây
+        await checkAndCancelAllOrders();
     }
+    while (isContinue) {
+        await trade();
+
+        // lấy giá bán gần nhất
+        await client
+            .getOrderbook({
+                category: 'spot',
+                symbol,
+            })
+            .then((response) => {
+                priceSellCheck = response.result.b[0][0]; //giá bán gần nhất
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        // update lại biến isContinue
+        await client
+            .getWalletBalance({
+                accountType: 'UNIFIED',
+                coin: coinName,
+            })
+            .then((response) => {
+                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng coin còn lại trong ví
+                isContinue = parseFloat(equity) * parseFloat(priceSellCheck) > 1 //nếu số lượng coin còn lại nhân với giá hiện tại > 1 thì tiếp tục
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+    // Return a success response
+    res.json({ message: 'Trade executed successfully' });
+
+
 });
 
 const arrData2 = [
