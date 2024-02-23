@@ -253,7 +253,12 @@ const arrData = [
     { apiKey: 'vzTqX5MhNxjQXPHWCK', secretKey: 'zvNjQ4cIMohrnRo2czqjcKpQYMvFrwnPsIin' },
 ];
 
-const arrData3 = []
+const arrData3 = [
+    { apiKey: 'ryxg4mNvEnGoYUcXeL', secretKey: 'WEZ8Or4PI9CmDLMikguC7Qu6fSveT3uOAk5f' },
+    { apiKey: 'VRlH4PfyB19swQSQbo', secretKey: 'IZzL9wRQxZwCTl9LT6tgQeZFqxYFdtAewpSr' },
+    { apiKey: 'DsbKMUXNUygOn5NOj5', secretKey: 'yifglLtwQ34sWSrjhomip3HwTqJVxZnVaP8I' },
+    { apiKey: 'PxGgLI7iWsQMeJ9Raq', secretKey: 'tFWc1FrVLrCWfWfJyue3DCeLzlctvGoS9xdf' },
+]
 
 // Define the POST endpoint
 app.get('/tradeHuy', async (req, res) => {
