@@ -230,17 +230,7 @@ app.get('/trade', async (req, res) => {
     }
 });
 
-const arrData = [
-    { apiKey: 'whg9Lp6RWsaEllzBpZ', secretKey: 'QDBtKNoe55MAxtL0LLOmdu5am1ESkcdpn5b6' },
-    { apiKey: 'SdCHr7s0r8mK8VQ6vV', secretKey: 'H8v8mbU8Ep3vwKAiF5FgLZLy9aHBUtWwa0FA' },
-    { apiKey: 'MZID18SqCsvJTXFTD3', secretKey: 'KLPVhsddmkEuvE6KmBZDAuUBNLUuw2WdOYD2' },
-    { apiKey: 'EyFkv4rDBdlYMiHbBV', secretKey: 'nrw5wcEVPc3dmUckYlcu8hBEf29Ah5DD5Nhs' },
-    { apiKey: 'uhFED0bfcALgRcFtgf', secretKey: 'hWPy2A4E7r5RBWGwLovSdVShMFtHNxi0raZ8' },
-    { apiKey: 'seTMBvPyFZdFAHSNts', secretKey: 'QZ89wRAw489AsvziIvbS2DabeIiF2qhs45fN' },
-    { apiKey: 'xwsJ4HF7pbedcS4Q6R', secretKey: 'HlBcL1xyNdYxhFhGLJ6UXluvkpij1M4zcTFp' },
-    { apiKey: 'pWDtoKBqmXPnYh4HRe', secretKey: 'b0wKmcc94a9fj9gwcnYMAL4leCgVHR8hkwiO' },
-    { apiKey: '6hRjX1wghSoXsH9fKn', secretKey: '51g4pwjeD6YT8Ed6RCCmMg89E3epwGkr429b' },
-    { apiKey: 'vzTqX5MhNxjQXPHWCK', secretKey: 'zvNjQ4cIMohrnRo2czqjcKpQYMvFrwnPsIin' },
+const arrData2 = [
     { apiKey: '6UkT2PaKJtbsba2BiB', secretKey: 'g5Eenaw3br41sFZ6t4tNTeht02slXqZpt3eg' },
     { apiKey: 'bCtzcQwDwxK5XDSvWN', secretKey: '5NwvV6aU3wgglQ9uJWp8C473M7ncGqyHkDce' },
     { apiKey: 'ASDXOp4TT8p7HwD5Kk', secretKey: 'zpguOGNC8sE23oKZHh2YMvSSuA84mEA8uWdb' },
@@ -252,10 +242,22 @@ const arrData = [
     { apiKey: '5S4lmd2Bv0MbBPAAGK', secretKey: '4hk8PmG7JcYk98uEhLFx4EWEBBkH8xtbeniC' },
     { apiKey: 'XH4JpFK5M6Ai7tuEGB', secretKey: 'Ll6O8KnTdibnbMKILb0OXPPSs1mHLbGaoB81' }
 ];
-// const arrData = [
-//     { apiKey: 'F6eVj1cJQruiuAn4mg', secretKey: 'MKTGRdWVPmfbbF8CEEm0kkZ10Ox4VvIcY2oI' },
-//     { apiKey: '480swT3YuT7OKKs5YY', secretKey: '6K2oqEFCIJwg9nCxYtIVtNYbbYoreiRvtdgM' },
-// ];
+
+
+const arrData = [
+    { apiKey: 'whg9Lp6RWsaEllzBpZ', secretKey: 'QDBtKNoe55MAxtL0LLOmdu5am1ESkcdpn5b6' },
+    { apiKey: 'SdCHr7s0r8mK8VQ6vV', secretKey: 'H8v8mbU8Ep3vwKAiF5FgLZLy9aHBUtWwa0FA' },
+    { apiKey: 'MZID18SqCsvJTXFTD3', secretKey: 'KLPVhsddmkEuvE6KmBZDAuUBNLUuw2WdOYD2' },
+    { apiKey: 'EyFkv4rDBdlYMiHbBV', secretKey: 'nrw5wcEVPc3dmUckYlcu8hBEf29Ah5DD5Nhs' },
+    { apiKey: 'uhFED0bfcALgRcFtgf', secretKey: 'hWPy2A4E7r5RBWGwLovSdVShMFtHNxi0raZ8' },
+    { apiKey: 'seTMBvPyFZdFAHSNts', secretKey: 'QZ89wRAw489AsvziIvbS2DabeIiF2qhs45fN' },
+    { apiKey: 'xwsJ4HF7pbedcS4Q6R', secretKey: 'HlBcL1xyNdYxhFhGLJ6UXluvkpij1M4zcTFp' },
+    { apiKey: 'pWDtoKBqmXPnYh4HRe', secretKey: 'b0wKmcc94a9fj9gwcnYMAL4leCgVHR8hkwiO' },
+    { apiKey: '6hRjX1wghSoXsH9fKn', secretKey: '51g4pwjeD6YT8Ed6RCCmMg89E3epwGkr429b' },
+    { apiKey: 'vzTqX5MhNxjQXPHWCK', secretKey: 'zvNjQ4cIMohrnRo2czqjcKpQYMvFrwnPsIin' },
+];
+
+const arrData3 = []
 
 // Define the POST endpoint
 app.get('/tradeHuy', async (req, res) => {
@@ -1007,7 +1009,7 @@ app.get('/ruttien', async (req, res) => {
             .createInternalTransfer(
                 transferId2,
                 'USDT',
-                '5',
+                '6',
                 'FUND',
                 'UNIFIED',
             )
@@ -1075,6 +1077,7 @@ app.get('/ruttien', async (req, res) => {
 app.get('/tradeLoop', async (req, res) => {
     const { coinName, API_KEY, API_SECRET } = req.query;
     let totalTrade = 0;
+    let isContinue = true;
     const client = new RestClientV5({
         key: API_KEY,
         secret: API_SECRET,
@@ -1183,24 +1186,6 @@ app.get('/tradeLoop', async (req, res) => {
                 console.error(error);
             });
 
-        async function placeSellOrder() {
-            await client
-                .submitOrder({
-                    category: 'spot',
-                    symbol,
-                    side: 'Sell',
-                    orderType: 'Limit',
-                    qty: equitySell,
-                    price: priceSell,
-                })
-                .then((response) => {
-                    console.log(response);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
-
         async function cancelAllOrders() {
             await client
                 .cancelAllOrders({
@@ -1215,7 +1200,7 @@ app.get('/tradeLoop', async (req, res) => {
                 });
         }
 
-        async function checkAndPlaceOrder() {
+        async function checkAndCancelAllOrders() {
             await client
                 .getActiveOrders({
                     category: 'spot',
@@ -1232,30 +1217,44 @@ app.get('/tradeLoop', async (req, res) => {
 
             if (openOrder.length !== 0) {
                 await cancelAllOrders();
-                await placeSellOrder();
+                // await placeSellOrder();
             }
         }
 
-        let iterations = 0; // Initialize a counter variable
-        const maxIterations = 3; // Set the maximum number of iterations
-
-        // Kiểm tra mỗi 1 giây
-        const intervalId = setInterval(async () => {
-            await checkAndPlaceOrder();
-
-            // Tăng biến đếm sau mỗi lần lặp
-            iterations++;
-
-            // Kiểm tra điều kiện dừng
-            if (openOrder.length === 0 || iterations >= maxIterations) {
-                clearInterval(intervalId); // Dừng vòng lặp nếu đạt điều kiện
-            }
-        }, 500);
+        // await sleep(200); // Chờ 1 giây
+        await checkAndCancelAllOrders();
 
     }
 
-    while (totalTrade <= 105) {
+    while (isContinue || totalTrade <= 105) {
         await trade()
+
+        // lấy giá bán gần nhất
+        await client
+            .getOrderbook({
+                category: 'spot',
+                symbol,
+            })
+            .then((response) => {
+                priceSellCheck = response.result.b[0][0]; //giá bán gần nhất
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        // update lại biến isContinue
+        await client
+            .getWalletBalance({
+                accountType: 'UNIFIED',
+                coin: coinName,
+            })
+            .then((response) => {
+                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng coin còn lại trong ví
+                isContinue = parseFloat(equity) * parseFloat(priceSellCheck) > 1 //nếu số lượng coin còn lại nhân với giá hiện tại > 1 thì tiếp tục
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
         await client
             .getExecutionList({
                 category: 'spot',
@@ -1274,7 +1273,7 @@ app.get('/tradeLoop', async (req, res) => {
 });
 
 app.get('/tradeLoopMul', async (req, res) => {
-    const { coinName } = req.query;
+    const { coinName, type } = req.query;
     const symbol = `${coinName}USDT`;
     let isContinue = true;
     let priceSellCheck = '9999'
@@ -1496,8 +1495,20 @@ app.get('/tradeLoopMul', async (req, res) => {
 
         }
     }
+    switch (type) {
+        case '1':
+            await processElements(arrData);
+            break;
+        case '2':
+            await processElements(arrData2);
+            break;
+        case '3':
+            await processElements(arrData3);
+            break;
 
-    await processElements(arrData);
+        default:
+            break;
+    }
 
     res.json({ message: 'Trade executed successfully' });
 
