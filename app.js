@@ -225,18 +225,14 @@ async function tradeCoin(client, coinName) {
 // trade coin loop
 async function tradeCoinLoop(client, coinName) {
     let isContinue = true;
-    let test = true
 
     let totalVolTrade = 0;
     while (totalVolTrade < 105) {
         await buyCoin(client, coinName);
         await sellCoin(client, coinName);
-        test = await checkAndCancelAllOrders(client, coinName);
+        await checkAndCancelAllOrders(client, coinName);
         totalVolTrade = await totalVol(client, coinName)
-        console.log({ totalVolTrade });
     }
-    await sellCoin(client, coinName); // Sell once more before entering the second while loop
-    test = await checkAndCancelAllOrders(client, coinName); // Check and cancel orders once more before entering the second while loop
 
     while (isContinue) {
         await sellCoin(client, coinName);
