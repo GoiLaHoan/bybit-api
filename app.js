@@ -39,11 +39,170 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// Buy coin
+async function buyCoin(client, coinName) {
+    let equityUSDT = null
+    let priceBuy = '0.01'
+    const symbol = `${coinName}USDT`;
+
+    // Lấy số dư USDT ví UNIFIED
+    await client
+        .getWalletBalance({
+            accountType: 'UNIFIED',
+            coin: 'USDT',
+        })
+        .then((response) => {
+            const equity = response.result.list[0].coin[0].equity; // số lượng usdt đang có trong ví UNIFIED
+
+            equityUSDT = String(convertFloat(equity))
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+
+    // Lấy giá mua gần nhất của đồng coin
+    await client
+        .getOrderbook({
+            category: 'spot',
+            symbol,
+        })
+        .then((response) => {
+            priceBuy = response.result.a[0][0]; // giá mua gần nhất
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+
+    // Mua giá gần nhất
+    await client
+        .submitOrder({
+            category: 'spot',
+            symbol,
+            side: 'Buy',
+            orderType: 'Limit',
+            qty: convertFloat(equityUSDT / priceBuy),
+            price: priceBuy,
+        })
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
+
+// Sell coin
+
+async function sellCoin(client, coinName) {
+    const symbol = `${coinName}USDT`;
+    let priceSell = '9999'
+    let equitySell = null
+
+    // Check coin đã có trong ví chưa
+    await client
+        .getWalletBalance({
+            accountType: 'UNIFIED',
+            coin: coinName,
+        })
+        .then((response) => {
+            const equity = response.result.list[0].coin[0].equity; // số lượng coin đang có trong ví
+            equitySell = String(convertFloat(equity))
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+    // Lấy giá bán gần nhất của đồng coin
+    await client
+        .getOrderbook({
+            category: 'spot',
+            symbol,
+        })
+        .then((response) => {
+            priceSell = response.result.b[0][0]; //giá bán gần nhất
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+    // Bán giá gần nhất
+    await client
+        .submitOrder({
+            category: 'spot',
+            symbol,
+            side: 'Sell',
+            orderType: 'Limit',
+            qty: equitySell, // bán hết
+            price: priceSell,
+        })
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+}
+
+async function checkAndCancelAllOrders(client, coinName) {
+    const symbol = `${coinName}USDT`;
+    let openOrder = []
+    let isContinue = false;
+    async function cancelAllOrders() {
+        await client
+            .cancelAllOrders({
+                category: 'spot',
+                settleCoin: 'USDT',
+            })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+    await client
+        .getActiveOrders({
+            category: 'spot',
+            symbol: symbol,
+            openOnly: 0,
+            limit: 1,
+        })
+        .then((response) => {
+            openOrder = response?.result?.list;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+    if (openOrder.length !== 0) {
+        await cancelAllOrders();
+        // await placeSellOrder();
+        isContinue = true
+    } else {
+        isContinue = false;
+    }
+    return isContinue
+}
+
+// trade coin
+
+async function tradeCoin(client, coinName) {
+    let isContinue = true;
+
+    await buyCoin(client, coinName);
+    while (isContinue) {
+        await sellCoin(client, coinName);
+        isContinue = await checkAndCancelAllOrders(client, coinName);
+    }
+}
 // Define the POST endpoint
 app.get('/trade', async (req, res) => {
     const { coinName, API_KEY, API_SECRET, sotienmua } = req.query;
-    const symbol = `${coinName}USDT`;
-    let isContinue = true;
+    // const symbol = `${coinName}USDT`;
+    // let isContinue = true;
 
     // Initialize RestClientV5 with provided credentials
     const client = new RestClientV5({
@@ -53,173 +212,7 @@ app.get('/trade', async (req, res) => {
     });
 
     // Call your trade function here passing the parameters from the request body
-
-    const trade = async () => {
-        let priceBuy = '0.01'
-        let priceSell = '9999'
-        let equityUSDT = null
-        let equitySell = null
-        let openOrder = []
-
-        // Lấy số dư USDT ví UNIFIED
-        await client
-            .getWalletBalance({
-                accountType: 'UNIFIED',
-                coin: 'USDT',
-            })
-            .then((response) => {
-                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng usdt đang có trong ví UNIFIED
-
-                equityUSDT = String(convertFloat(equity))
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-
-        // Lấy giá mua và giá bán gần nhất của đồng coin
-        await client
-            .getOrderbook({
-                category: 'spot',
-                symbol,
-            })
-            .then((response) => {
-                priceBuy = response.result.a[0][0]; // giá mua gần nhất
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-
-        // Mua giá gần nhất
-        await client
-            .submitOrder({
-                category: 'spot',
-                symbol,
-                side: 'Buy',
-                orderType: 'Limit',
-                qty: sotienmua ? convertFloat(sotienmua / priceBuy) : convertFloat(equityUSDT / priceBuy),
-                price: priceBuy,
-            })
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-
-        // Check coin đã có trong ví chưa
-        await client
-            .getWalletBalance({
-                accountType: 'UNIFIED',
-                coin: coinName,
-            })
-            .then((response) => {
-                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng coin đang có trong ví
-                equitySell = String(convertFloat(equity))
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-        // Lấy giá mua và giá bán gần nhất của đồng coin
-        await client
-            .getOrderbook({
-                category: 'spot',
-                symbol,
-            })
-            .then((response) => {
-                priceSell = response.result.b[0][0]; //giá bán gần nhất
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-        // Bán giá gần nhất
-        await client
-            .submitOrder({
-                category: 'spot',
-                symbol,
-                side: 'Sell',
-                orderType: 'Limit',
-                qty: equitySell, // bán hết
-                price: priceSell,
-            })
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-        async function cancelAllOrders() {
-            await client
-                .cancelAllOrders({
-                    category: 'spot',
-                    settleCoin: 'USDT',
-                })
-                .then((response) => {
-                    console.log(response);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
-
-        async function checkAndCancelAllOrders() {
-            await client
-                .getActiveOrders({
-                    category: 'spot',
-                    symbol: symbol,
-                    openOnly: 0,
-                    limit: 1,
-                })
-                .then((response) => {
-                    openOrder = response?.result?.list;
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-
-            if (openOrder.length !== 0) {
-                await cancelAllOrders();
-                // await placeSellOrder();
-            }
-        }
-
-        // await sleep(200); // Chờ 1 giây
-        await checkAndCancelAllOrders();
-    }
-    while (isContinue) {
-        await trade();
-
-        // lấy giá bán gần nhất
-        await client
-            .getOrderbook({
-                category: 'spot',
-                symbol,
-            })
-            .then((response) => {
-                priceSellCheck = response.result.b[0][0]; //giá bán gần nhất
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-        // update lại biến isContinue
-        await client
-            .getWalletBalance({
-                accountType: 'UNIFIED',
-                coin: coinName,
-            })
-            .then((response) => {
-                const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng coin còn lại trong ví
-                isContinue = parseFloat(equity) * parseFloat(priceSellCheck) > 1 //nếu số lượng coin còn lại nhân với giá hiện tại > 1 thì tiếp tục
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
+    await tradeCoin(client, coinName)
     // Return a success response
     res.json({ message: 'Trade executed successfully' });
 
@@ -253,7 +246,11 @@ const arrData = [
     { apiKey: 'vzTqX5MhNxjQXPHWCK', secretKey: 'zvNjQ4cIMohrnRo2czqjcKpQYMvFrwnPsIin' },
 ];
 
-const arrData3 = []
+const arrData3 = [
+    // { apiKey: 'VRlH4PfyB19swQSQbo', secretKey: 'IZzL9wRQxZwCTl9LT6tgQeZFqxYFdtAewpSr' },
+    { apiKey: 'DsbKMUXNUygOn5NOj5', secretKey: 'yifglLtwQ34sWSrjhomip3HwTqJVxZnVaP8I' },
+    // { apiKey: 'PxGgLI7iWsQMeJ9Raq', secretKey: 'tFWc1FrVLrCWfWfJyue3DCeLzlctvGoS9xdf' },
+]
 
 // Define the POST endpoint
 app.get('/tradeHuy', async (req, res) => {
