@@ -220,11 +220,11 @@ async function tradeCoin(client, coinName) {
 }
 
 // trade coin loop
-async function tradeCoinLoop(client, coinName) {
+async function tradeCoinLoop(client, coinName, volume) {
     let isContinue = true;
-
+    let volumeCoin = volume ? volume : 105
     let totalVolTrade = 0;
-    while (totalVolTrade < 205) {
+    while (totalVolTrade < volumeCoin) {
         await buyCoin(client, coinName);
         await sellCoin(client, coinName);
         isContinue= await checkAndCancelAllOrders(client, coinName);
@@ -1105,14 +1105,14 @@ app.get('/ruttien', async (req, res) => {
 });
 
 app.get('/tradeLoop', async (req, res) => {
-    const { coinName, API_KEY, API_SECRET } = req.query;
+    const { coinName, API_KEY, API_SECRET, volume } = req.query;
     const client = new RestClientV5({
         key: API_KEY,
         secret: API_SECRET,
         testnet: false,
     })
 
-    tradeCoinLoop(client, coinName)
+    tradeCoinLoop(client, coinName, volume)
     res.json({ message: 'Trade executed successfully' });
 
 });
