@@ -224,14 +224,20 @@ async function tradeCoinLoop(client, coinName, volume) {
     let isContinue = true;
     let volumeCoin = volume ? volume : 105
     let totalVolTrade = 0;
-    while (totalVolTrade < volumeCoin) {
+    let timeOut = true;
+
+    setTimeout(() => {
+        timeOut = false; // Sau 10 giây, dừng vòng lặp
+    }, 10000); // 10 giây là 10000 miligiây
+
+    while (totalVolTrade < volumeCoin && timeOut) {
         await buyCoin(client, coinName);
         await sellCoin(client, coinName);
         isContinue= await checkAndCancelAllOrders(client, coinName);
         totalVolTrade = await totalVol(client, coinName)
     }
 
-    while (isContinue) {
+    while (isContinue && timeOut) {
         await sellCoin(client, coinName);
         isContinue = await checkAndCancelAllOrders(client, coinName);
     }
