@@ -53,7 +53,6 @@ async function buyCoin(client, coinName) {
         })
         .then((response) => {
             const equity = response.result.list[0].coin[0].equity; // số lượng usdt đang có trong ví UNIFIED
-
             equityUSDT = String(convertFloat(equity))
         })
         .catch((error) => {
@@ -94,7 +93,6 @@ async function buyCoin(client, coinName) {
 }
 
 // Sell coin
-
 async function sellCoin(client, coinName) {
     const symbol = `${coinName}USDT`;
     let priceSell = '9999'
@@ -184,11 +182,11 @@ async function checkAndCancelAllOrders(client, coinName) {
     } else {
         isContinue = false;
     }
+
     return isContinue
 }
 
 // Calculate total trading volume
-
 async function totalVol(client, coinName) {
     const symbol = `${coinName}USDT`;
     let totalVolTrade = 0;
@@ -211,7 +209,6 @@ async function totalVol(client, coinName) {
 
 
 // trade coin
-
 async function tradeCoin(client, coinName) {
     let isContinue = true;
 
@@ -227,10 +224,10 @@ async function tradeCoinLoop(client, coinName) {
     let isContinue = true;
 
     let totalVolTrade = 0;
-    while (totalVolTrade < 105) {
+    while (totalVolTrade < 205) {
         await buyCoin(client, coinName);
         await sellCoin(client, coinName);
-        await checkAndCancelAllOrders(client, coinName);
+        isContinue= await checkAndCancelAllOrders(client, coinName);
         totalVolTrade = await totalVol(client, coinName)
     }
 
@@ -238,15 +235,12 @@ async function tradeCoinLoop(client, coinName) {
         await sellCoin(client, coinName);
         isContinue = await checkAndCancelAllOrders(client, coinName);
     }
-
 }
 
 // Define the POST endpoint
 app.get('/trade', async (req, res) => {
-    const { coinName, API_KEY, API_SECRET, sotienmua } = req.query;
-    // const symbol = `${coinName}USDT`;
-    // let isContinue = true;
-
+    const { coinName, API_KEY, API_SECRET } = req.query;
+   
     // Initialize RestClientV5 with provided credentials
     const client = new RestClientV5({
         key: API_KEY,
@@ -258,7 +252,6 @@ app.get('/trade', async (req, res) => {
     await tradeCoin(client, coinName)
     // Return a success response
     res.json({ message: 'Trade executed successfully' });
-
 
 });
 
@@ -274,7 +267,6 @@ const arrData2 = [
     { apiKey: '5S4lmd2Bv0MbBPAAGK', secretKey: '4hk8PmG7JcYk98uEhLFx4EWEBBkH8xtbeniC' },
     { apiKey: 'XH4JpFK5M6Ai7tuEGB', secretKey: 'Ll6O8KnTdibnbMKILb0OXPPSs1mHLbGaoB81' }
 ];
-
 
 const arrData = [
     { apiKey: 'whg9Lp6RWsaEllzBpZ', secretKey: 'QDBtKNoe55MAxtL0LLOmdu5am1ESkcdpn5b6' },
@@ -989,6 +981,7 @@ app.get('/trade2', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
 app.get('/ruttien', async (req, res) => {
     const { API_KEY, API_SECRET, diachiruttien } = req.query;
 
