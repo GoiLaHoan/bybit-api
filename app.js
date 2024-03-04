@@ -226,7 +226,7 @@ async function tradeCoin(client, coinName) {
 // trade coin loop
 async function tradeCoinLoop(client, coinName, volume) {
     let isContinue = true;
-    let volumeCoin = volume ? volume : 30;
+    let volumeCoin = volume ? volume : 105;
     let timeOut = true;
     let totalVolTrade = 0;
 
@@ -714,6 +714,97 @@ app.get('/tradeLoop2', async (req, res) => {
 
     await tradeCoinLoop(client, coinName1, volume);
     await tradeCoinLoop(client, coinName2, volume);
+    res.json({ message: 'Trade executed successfully' });
+
+});
+
+// Mua bán nhiều acc 2 đồng coin đến khi đủ volume(cần sửa lại nếu rule volume của 2 đồng là khác nhau)
+app.get('/tradeLoopMul2', async (req, res) => {
+    const { coinName1, coinName2, type, volume } = req.query;
+    const trade = async (apiKey, secretKey) => {
+        const client = new RestClientV5({
+            key: apiKey,
+            secret: secretKey,
+            testnet: false,
+        });
+
+        await tradeCoinLoop(client, coinName1, volume);
+        await tradeCoinLoop(client, coinName2, volume);
+    }
+    // loop
+    async function processElements(arrData) {
+        for (const element of arrData) {
+            await trade(element.apiKey, element.secretKey);
+        }
+    }
+    switch (type) {
+        case '1':
+            await processElements(dataHuy1);
+            break;
+        case '2':
+            await processElements(dataHuy2);
+            break;
+        case '3':
+            await processElements(dataHuy3);
+            break;
+
+        default:
+            break;
+    }
+
+    res.json({ message: 'Check done' });
+
+});
+
+// check coin có trong ví hay không
+app.get('/checkCoin', async (req, res) => {
+    const { coinName, wallet, type } = req.query;
+    const check = async (apiKey, secretKey) => {
+        const client = new RestClientV5({
+            key: apiKey,
+            secret: secretKey,
+            testnet: false,
+        });
+
+        // Check coin đã có trong ví chưa
+        await client
+            .getAllCoinsBalance({
+                accountType: wallet, //FUND hoặc UNIFIED
+                coin: coinName,
+            })
+            .then((response) => {
+                const equity = parseFloat(response.result.balance?.[0]?.transferBalance) // số lượng coin đang có trong ví
+                // console.log('RES', response.result);
+                if (equity > 1) {
+                    console.log(`Có ${equity} ${coinName} trong ví ${wallet}`);
+                    console.log({ apiKey });
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+    // loop
+    async function processElements(arrData) {
+        for (const element of arrData) {
+            await check(element.apiKey, element.secretKey);
+        }
+    }
+    switch (type) {
+        case '1':
+            await processElements(dataHuy1);
+            break;
+        case '2':
+            await processElements(dataHuy2);
+            break;
+        case '3':
+            await processElements(dataHuy3);
+            break;
+
+        default:
+            break;
+    }
+
     res.json({ message: 'Trade executed successfully' });
 
 });
