@@ -40,8 +40,8 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// khai báo totalVolTrade 
-let totalVolTrade = 0;
+// // khai báo totalVolTrade 
+// let totalVolTrade = 0;
 
 // Buy coin
 async function buyCoin(client, coinName) {
@@ -226,12 +226,14 @@ async function tradeCoin(client, coinName) {
 // trade coin loop
 async function tradeCoinLoop(client, coinName, volume) {
     let isContinue = true;
-    let volumeCoin = volume ? volume : 105
+    let volumeCoin = volume ? volume : 30;
     let timeOut = true;
+    let totalVolTrade = 0;
+
 
     setTimeout(() => {
-        timeOut = false; // Sau 10 giây, dừng vòng lặp
-    }, 10000); // 10 giây là 10000 miligiây
+        timeOut = false; // Sau 20 giây, dừng vòng lặp
+    }, 20000); // 20 giây là 10000 miligiây
 
     while (totalVolTrade < volumeCoin && timeOut) {
         await buyCoin(client, coinName);
@@ -239,6 +241,7 @@ async function tradeCoinLoop(client, coinName, volume) {
         isContinue = await checkAndCancelAllOrders(client, coinName);
         totalVolTrade = await totalVol(client, coinName)
     }
+    totalVolTrade = 0;
 
     while (isContinue && timeOut) {
         await sellCoin(client, coinName);

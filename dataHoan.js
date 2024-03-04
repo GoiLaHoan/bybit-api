@@ -1,11 +1,12 @@
-export const dataHoan1 = [
+const dataHoan1 = [
 
 ];
 
-export const dataHoan2 = [
+const dataHoan2 = [
 
 ];
 
-export const dataHoan3 = [
+const dataHoan3 = [
 
 ]
+module.exports = { dataHoan1, dataHoan2, dataHoan3 };
