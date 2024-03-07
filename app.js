@@ -286,19 +286,24 @@ app.get('/tradeLoop', async (req, res) => {
 // Mua bán nhiều acc đến khi đủ volume
 app.get('/tradeLoopMul', async (req, res) => {
     const { coinName, type, volume } = req.query;
-    const trade = async (apiKey, secretKey) => {
-        const client = new RestClientV5({
-            key: apiKey,
-            secret: secretKey,
-            testnet: false,
-        });
+    const trade = async (apiKey, secretKey, proxy) => {
+        const client = new RestClientV5(
+            {
+                key: apiKey,
+                secret: secretKey,
+                testnet: false,
+            },
+            {
+                proxy
+            }
+        );
 
         await tradeCoinLoop(client, coinName, volume)
     }
     // loop
     async function processElements(arrData) {
         for (const element of arrData) {
-            await trade(element.apiKey, element.secretKey);
+            await trade(element.apiKey, element.secretKey, element.proxy);
         }
     }
     switch (type) {
