@@ -679,7 +679,7 @@ app.get('/ruttien', async (req, res) => {
             .createInternalTransfer(
                 transferId2,
                 'USDT',
-                '6',
+                '10',
                 'FUND',
                 'UNIFIED',
             )
