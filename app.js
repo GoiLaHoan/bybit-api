@@ -21,6 +21,34 @@ app.get('/ipv4', (req, res) => {
     return res.json({ message: `Hello! Your IP address is: ${ipAddress}` });
 });
 
+app.get('/haha', (req, res) => {
+    const client = new RestClientV5(
+        {
+            key: 'yM2HK9R3EJqSSevggs',
+            secret: 'y8vaft9LTWNVByiSZ0vTeEfngKKiFuZC57do',
+            testnet: false,
+        },
+        {
+            proxy: {
+                host: "qna03.vitechcheap.com",
+                port: 28050,
+                auth: { username: "user_ftw3s", password: "h4wvzsnd" },
+            },
+        }
+    );
+    (async () => {
+        try {
+            const res = await client.getWalletBalance({ accountType: 'UNIFIED', coin: 'USDT' });
+            console.log('response: ', JSON.stringify(res, null, 2));
+        } catch (e) {
+            console.error('request failed: ', e);
+        }
+    })();
+    const ipAddress = req.ip;
+    return res.json({ message: `Hello! Your IP address is: ${ipAddress}` });
+});
+
+
 function convertFloat(inputNumber) {
     const floatNumber = parseFloat(inputNumber);
 
