@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { v4: uuidv4 } = require('uuid');
 const { dataHuy1, dataHuy2, dataHuy3 } = require('./dataHuy');
+const { dataHoan1 } = require('./dataHoan');
 // Create an instance of express
 const app = express();
 
@@ -284,7 +285,7 @@ app.get('/tradeLoop', async (req, res) => {
 
 // Mua bán nhiều acc đến khi đủ volume
 app.get('/tradeLoopMul', async (req, res) => {
-    const { coinName, type } = req.query;
+    const { coinName, type, volume } = req.query;
     const trade = async (apiKey, secretKey) => {
         const client = new RestClientV5({
             key: apiKey,
@@ -292,7 +293,7 @@ app.get('/tradeLoopMul', async (req, res) => {
             testnet: false,
         });
 
-        await tradeCoinLoop(client, coinName)
+        await tradeCoinLoop(client, coinName, volume)
     }
     // loop
     async function processElements(arrData) {
@@ -310,7 +311,9 @@ app.get('/tradeLoopMul', async (req, res) => {
         case '3':
             await processElements(dataHuy3);
             break;
-
+        case '4':
+            await processElements(dataHoan1);
+            break;
         default:
             break;
     }
