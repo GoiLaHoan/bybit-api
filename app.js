@@ -56,7 +56,7 @@ async function buyCoin(client, coinName) {
             coin: 'USDT',
         })
         .then((response) => {
-            const equity = response.result.list[0].coin[0].equity; // số lượng usdt đang có trong ví UNIFIED
+            const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng usdt đang có trong ví UNIFIED
             equityUSDT = String(convertFloat(equity))
         })
         .catch((error) => {
@@ -109,7 +109,7 @@ async function sellCoin(client, coinName) {
             coin: coinName,
         })
         .then((response) => {
-            const equity = response.result.list[0].coin[0].equity; // số lượng coin đang có trong ví
+            const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng coin đang có trong ví
             equitySell = String(convertFloat(equity))
         })
         .catch((error) => {
