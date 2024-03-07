@@ -555,6 +555,69 @@ app.get('/sellcoinold', async (req, res) => {
     }
 });
 
+// bán coin nhiều acc
+app.get('/sellCoinOldMul', async (req, res) => {
+    const { coinName, API_KEY, API_SECRET } = req.query;
+    const symbol = `${coinName}USDT`;
+
+    // Initialize RestClientV5 with provided credentials
+    const client = new RestClientV5({
+        key: API_KEY,
+        secret: API_SECRET,
+        testnet: false,
+    });
+
+    // Call your trade function here passing the parameters from the request body
+    try {
+        let isContinue = true;
+        let qtyCoin = '0'
+        const transferId1 = uuidv4();
+        const transferId2 = uuidv4();
+        let equityUNIFIEDUSDT = null;
+
+        // kiểm tra số lượng coin có trong ví FUNDING
+        await client
+            .getAllCoinsBalance({ accountType: 'FUND', coin: coinName })
+            .then((response) => {
+                // console.log('response', response.result);
+                qtyCoin = String(response.result.balance[0].transferBalance)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        if (parseFloat(qtyCoin) > 0) {
+            // chuyển toàn bộ coin sang ví unified
+            await client
+                .createInternalTransfer(
+                    transferId1,
+                    coinName,
+                    qtyCoin,
+                    'FUND',
+                    'UNIFIED',
+                )
+                .then((response) => {
+                    console.log('response', response);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+            // bán toàn bộ
+            while (isContinue) {
+                await sellCoin(client, coinName);
+                isContinue = await checkAndCancelAllOrders(client, coinName);
+            }
+
+        }
+
+        // Return a success response
+        res.json({ message: 'Trade executed successfully' });
+
+    } catch (error) {
+        // Return an error response
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // rút tiền để lại x$ trong ví UNIFIED
 app.get('/ruttien', async (req, res) => {
     const { API_KEY, API_SECRET, diachiruttien } = req.query;
@@ -613,7 +676,7 @@ app.get('/ruttien', async (req, res) => {
             .createInternalTransfer(
                 transferId2,
                 'USDT',
-                '10',
+                '6',
                 'FUND',
                 'UNIFIED',
             )
@@ -752,7 +815,7 @@ app.get('/tradeLoopMul2', async (req, res) => {
             break;
     }
 
-    res.json({ message: 'Check done' });
+    res.json({ message: 'Trade done' });
 
 });
 
@@ -774,7 +837,7 @@ app.get('/checkCoin', async (req, res) => {
             })
             .then((response) => {
                 const equity = parseFloat(response.result.balance?.[0]?.transferBalance) // số lượng coin đang có trong ví
-                // console.log('RES', response.result);
+                // console.log('RES', response);
                 if (equity > 1) {
                     console.log(`Có ${equity} ${coinName} trong ví ${wallet}`);
                     console.log({ apiKey });
@@ -805,7 +868,7 @@ app.get('/checkCoin', async (req, res) => {
             break;
     }
 
-    res.json({ message: 'Trade executed successfully' });
+    res.json({ message: 'Check done' });
 
 });
 
