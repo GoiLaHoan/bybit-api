@@ -348,6 +348,47 @@ app.get('/trade', async (req, res) => {
 
 });
 
+// trade nhiều acc 1 lần
+app.get('/tradeMul', async (req, res) => {
+    const { coinName, type } = req.query;
+    const trade = async (apiKey, secretKey) => {
+        const client = new RestClientV5(
+            {
+                key: apiKey,
+                secret: secretKey,
+                testnet: false,
+            }
+        );
+
+        await tradeCoin(client, coinName)
+    }
+    // loop
+    async function processElements(arrData) {
+        for (const element of arrData) {
+            await trade(element.apiKey, element.secretKey);
+        }
+    }
+    switch (type) {
+        case '1':
+            await processElements(dataHuy1);
+            break;
+        case '2':
+            await processElements(dataHuy2);
+            break;
+        case '3':
+            await processElements(dataHuy3);
+            break;
+        case '4':
+            await processElements(dataHoan1);
+            break;
+        default:
+            break;
+    }
+
+    res.json({ message: 'Trade executed successfully' });
+
+});
+
 // Mua bán 1 acc đến khi đủ volume
 app.get('/tradeLoop', async (req, res) => {
     const { coinName, API_KEY, API_SECRET, volume } = req.query;
