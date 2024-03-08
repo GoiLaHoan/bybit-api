@@ -56,9 +56,9 @@ app.get('/hehe', (req, res) => {
         },
         {
             proxy: {
-                host: "103.183.119.18",
-                port: 59283,
-                auth: { username: "atsj9j2j", password: "aTsJ9j2J" },
+                host: "103.72.68.234",
+                port: 29249,
+                auth: { username: "oezy9580", password: "QONtck0368" },
             },
         }
     );
