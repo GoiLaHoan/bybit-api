@@ -30,9 +30,9 @@ app.get('/haha', (req, res) => {
         },
         {
             proxy: {
-                host: "103.186.149.42",
-                port: 31903,
-                auth: { username: "dsxz1653", password: "XCDeqv5843" },
+                host: "qna03.vitechcheap.com",
+                port: 28050,
+                auth: { username: "user_ftw3s", password: "h4wvzsnd" },
             },
         }
     );
