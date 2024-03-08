@@ -30,10 +30,61 @@ app.get('/haha', (req, res) => {
         },
         {
             proxy: {
-                host: "45.32.117.124",
-                port: 13051,
-                auth: { username: "3Gn85b", password: "f9YtSR" },
-                // protocol: 'http'
+                host: "qna03.vitechcheap.com",
+                port: 28050,
+                auth: { username: "user_ftw3s", password: "h4wvzsnd" },
+            },
+        }
+    );
+    (async () => {
+        try {
+            const res = await client.getWalletBalance({ accountType: 'UNIFIED', coin: 'USDT' });
+            console.log('response: ', JSON.stringify(res, null, 2));
+        } catch (e) {
+            console.error('request failed: ', e);
+        }
+    })();
+    const ipAddress = req.ip;
+    return res.json({ message: `Hello! Your IP address is: ${ipAddress}` });
+});
+app.get('/hehe', (req, res) => {
+    const client = new RestClientV5(
+        {
+            key: 'yM2HK9R3EJqSSevggs',
+            secret: 'y8vaft9LTWNVByiSZ0vTeEfngKKiFuZC57do',
+            testnet: false,
+        },
+        {
+            proxy: {
+                host: "103.183.119.18",
+                port: 59283,
+                auth: { username: "atsj9j2j", password: "aTsJ9j2J" },
+            },
+        }
+    );
+    (async () => {
+        try {
+            const res = await client.getWalletBalance({ accountType: 'UNIFIED', coin: 'USDT' });
+            console.log('response: ', JSON.stringify(res, null, 2));
+        } catch (e) {
+            console.error('request failed: ', e);
+        }
+    })();
+    const ipAddress = req.ip;
+    return res.json({ message: `Hello! Your IP address is: ${ipAddress}` });
+});
+app.get('/hoho', (req, res) => {
+    const client = new RestClientV5(
+        {
+            key: 'yM2HK9R3EJqSSevggs',
+            secret: 'y8vaft9LTWNVByiSZ0vTeEfngKKiFuZC57do',
+            testnet: false,
+        },
+        {
+            proxy: {
+                host: "15.235.138.130",
+                port: 59393,
+                auth: { username: "fcjz2e2t", password: "fCjZ2e2t" },
             },
         }
     );
