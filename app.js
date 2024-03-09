@@ -757,8 +757,6 @@ app.get('/ruttien', async (req, res) => {
         testnet: false,
     });
 
-
-
     try {
         let sotiencotherut = 0;
         let equityUNIFIEDUSDT = null;
@@ -799,23 +797,23 @@ app.get('/ruttien', async (req, res) => {
 
         await sleep(2000); // Chờ 2 giây
 
-        // chuyen 5$ sang giao ngay
-        await client
-            .createInternalTransfer(
-                transferId2,
-                'USDT',
-                '10',
-                'FUND',
-                'UNIFIED',
-            )
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        // // chuyen 5$ sang giao ngay
+        // await client
+        //     .createInternalTransfer(
+        //         transferId2,
+        //         'USDT',
+        //         '10',
+        //         'FUND',
+        //         'UNIFIED',
+        //     )
+        //     .then((response) => {
+        //         console.log(response);
+        //     })
+        //     .catch((error) => {
+        //         console.error(error);
+        //     });
 
-        await sleep(2000); // Chờ 2 giây
+        // await sleep(2000); // Chờ 2 giây
 
         // 
         // client
