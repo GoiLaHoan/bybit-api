@@ -30,8 +30,9 @@ app.get('/haha', (req, res) => {
         },
         {
             proxy: {
-                host: "qna08.vitechcheap.com",
-                port: 20062,
+                host: "qna03.vitechcheap.com",
+                port: 28074,
+                auth: { username: "user_gnkogl", password: "hbwy0u7t" },
             },
         }
     );
@@ -423,6 +424,7 @@ app.get('/tradeLoopMul', async (req, res) => {
     // loop
     async function processElements(arrData) {
         for (const element of arrData) {
+            console.log('apikey: ', element.apiKey);
             await trade(element.apiKey, element.secretKey, element.proxy);
         }
     }
