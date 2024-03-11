@@ -800,22 +800,22 @@ app.get('/ruttien', async (req, res) => {
         await sleep(2000); // Chờ 2 giây
 
         // // chuyen 5$ sang giao ngay
-        // await client
-        //     .createInternalTransfer(
-        //         transferId2,
-        //         'USDT',
-        //         '10',
-        //         'FUND',
-        //         'UNIFIED',
-        //     )
-        //     .then((response) => {
-        //         console.log(response);
-        //     })
-        //     .catch((error) => {
-        //         console.error(error);
-        //     });
+        await client
+            .createInternalTransfer(
+                transferId2,
+                'USDT',
+                '10',
+                'FUND',
+                'UNIFIED',
+            )
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
 
-        // await sleep(2000); // Chờ 2 giây
+        await sleep(2000); // Chờ 2 giây
 
         // 
         // client
@@ -974,6 +974,43 @@ app.get('/checkCoin', async (req, res) => {
             .catch((error) => {
                 console.error(error);
             });
+    }
+    // loop
+    async function processElements(arrData) {
+        for (const element of arrData) {
+            await check(element.apiKey, element.secretKey);
+        }
+    }
+    switch (type) {
+        case '1':
+            await processElements(dataHuy1);
+            break;
+        case '2':
+            await processElements(dataHuy2);
+            break;
+        case '3':
+            await processElements(dataHuy3);
+            break;
+
+        default:
+            break;
+    }
+
+    res.json({ message: 'Check done' });
+
+});
+app.get('/checkVolTrade', async (req, res) => {
+    const { coinName, type } = req.query;
+    const check = async (apiKey, secretKey) => {
+        const client = new RestClientV5({
+            key: apiKey,
+            secret: secretKey,
+            testnet: false,
+        });
+
+        // Check coin đã có trong ví chưa
+        const totalVolTrade = await totalVol(client, coinName)
+        console.log(`Tổng vol trade ${coinName} là ${totalVolTrade} - ${apiKey} `);
     }
     // loop
     async function processElements(arrData) {
