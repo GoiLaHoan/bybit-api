@@ -314,7 +314,7 @@ async function tradeCoinLoop(client, coinName, volume) {
 
     setTimeout(() => {
         timeOut = false; // Sau 20 giây, dừng vòng lặp
-    }, 30000); // 30 giây là 30000 miligiây
+    }, 50000); // 50 giây là 30000 miligiây
 
     while (totalVolTrade < volumeCoin && timeOut) {
         await buyCoin(client, coinName);
@@ -398,8 +398,68 @@ app.get('/tradeLoop', async (req, res) => {
         secret: API_SECRET,
         testnet: false,
     })
+    const startTime = Date.now(); // Lấy thời gian bắt đầu của hàm tradeCoinLoop
 
     await tradeCoinLoop(client, coinName, volume)
+
+    const endTime = Date.now(); // Lấy thời gian kết thúc của hàm tradeCoinLoop
+    const executionTime = endTime - startTime; // Tính toán thời gian thực thi của hàm tradeCoinLoop
+
+    console.log(`Thời gian thực thi của hàm tradeCoinLoop là ${executionTime} milliseconds.`);
+    res.json({ message: 'Trade executed successfully' });
+
+});
+app.get('/tradeLoopProxyVN', async (req, res) => {
+    const { coinName, API_KEY, API_SECRET, volume } = req.query;
+    const client = new RestClientV5(
+        {
+            key: API_KEY,
+            secret: API_SECRET,
+            testnet: false,
+        },
+        {
+            proxy: {
+                host: "qna02.vitechcheap.com",
+                port: 27070,
+                auth: { username: "user_lvidz", password: "0a1orb6e" },
+            }
+        }
+    )
+    const startTime = Date.now(); // Lấy thời gian bắt đầu của hàm tradeCoinLoop
+
+    await tradeCoinLoop(client, coinName, volume)
+
+    const endTime = Date.now(); // Lấy thời gian kết thúc của hàm tradeCoinLoop
+    const executionTime = endTime - startTime; // Tính toán thời gian thực thi của hàm tradeCoinLoop
+
+    console.log(`Thời gian thực thi của hàm tradeCoinLoopProxyVN là ${executionTime} milliseconds.`);
+    res.json({ message: 'Trade executed successfully' });
+
+});
+app.get('/tradeLoopProxySing', async (req, res) => {
+    const { coinName, API_KEY, API_SECRET, volume } = req.query;
+    const client = new RestClientV5(
+        {
+            key: API_KEY,
+            secret: API_SECRET,
+            testnet: false,
+        },
+        {
+            proxy: {
+                host: "103.229.210.88",
+                port: 64404,
+                auth: { username: "w4kAD8r2", password: "jptij6W5" },
+            }
+        }
+    )
+    const startTime = Date.now(); // Lấy thời gian bắt đầu của hàm tradeCoinLoop
+
+    await tradeCoinLoop(client, coinName, volume)
+
+    const endTime = Date.now(); // Lấy thời gian kết thúc của hàm tradeCoinLoop
+    const executionTime = endTime - startTime; // Tính toán thời gian thực thi của hàm tradeCoinLoop
+
+    console.log(`Thời gian thực thi của hàm tradeCoinLoopProxySing là ${executionTime} milliseconds.`);
     res.json({ message: 'Trade executed successfully' });
 
 });
@@ -1030,6 +1090,12 @@ app.get('/checkVolTrade', async (req, res) => {
             break;
         case '3':
             await processElements(dataHuy3);
+            break;
+        case '4':
+            await processElements(dataHuy4);
+            break;
+        case '5':
+            await processElements(dataHuy5);
             break;
 
         default:
