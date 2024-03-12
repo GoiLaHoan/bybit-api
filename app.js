@@ -33,6 +33,7 @@ app.get('/haha', (req, res) => {
                 host: "15.235.148.205",
                 port: 34345,
                 auth: { username: "fciq8l3v", password: "fCiQ8l3v" },
+                protocol: 'socks5'
             },
         }
     );
