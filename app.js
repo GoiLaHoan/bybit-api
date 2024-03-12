@@ -30,9 +30,9 @@ app.get('/haha', (req, res) => {
         },
         {
             proxy: {
-                host: "qna03.vitechcheap.com",
-                port: 28074,
-                auth: { username: "user_gnkogl", password: "hbwy0u7t" },
+                host: "15.235.148.205",
+                port: 34344,
+                auth: { username: "fciq8l3v", password: "fCiQ8l3v" },
             },
         }
     );
@@ -56,10 +56,10 @@ app.get('/hehe', (req, res) => {
         },
         {
             proxy: {
-                host: "14.225.64.164",
-                port: 6666,
-                auth: { username: "mlxd3g8u", password: "mLxD3g8u" },
-            },
+                host: "qna02.vitechcheap.com",
+                port: 27070,
+                auth: { username: "user_lvidz", password: "0a1orb6e" },
+            }
         }
     );
     (async () => {
