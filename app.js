@@ -2,7 +2,7 @@ const { RestClientV5 } = require('bybit-api');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { v4: uuidv4 } = require('uuid');
-const { dataHuy1, dataHuy2, dataHuy3 } = require('./dataHuy');
+const { dataHuy1, dataHuy2, dataHuy3, dataHuy4, dataHuy5 } = require('./dataHuy');
 const { dataHoan1 } = require('./dataHoan');
 // Create an instance of express
 const app = express();
@@ -314,7 +314,7 @@ async function tradeCoinLoop(client, coinName, volume) {
 
     setTimeout(() => {
         timeOut = false; // Sau 20 giây, dừng vòng lặp
-    }, 20000); // 20 giây là 10000 miligiây
+    }, 30000); // 30 giây là 30000 miligiây
 
     while (totalVolTrade < volumeCoin && timeOut) {
         await buyCoin(client, coinName);
@@ -439,7 +439,10 @@ app.get('/tradeLoopMul', async (req, res) => {
             await processElements(dataHuy3);
             break;
         case '4':
-            await processElements(dataHoan1);
+            await processElements(dataHuy4);
+            break;
+        case '5':
+            await processElements(dataHuy5);
             break;
         default:
             break;
