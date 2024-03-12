@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { v4: uuidv4 } = require('uuid');
 const { dataHuy1, dataHuy2, dataHuy3, dataHuy4, dataHuy5 } = require('./dataHuy');
-const { dataHoan1 } = require('./dataHoan');
+const { dataHoan1, dataHoan2, dataHoan3 } = require('./dataHoan');
 // Create an instance of express
 const app = express();
 
@@ -504,6 +504,15 @@ app.get('/tradeLoopMul', async (req, res) => {
             break;
         case '5':
             await processElements(dataHuy5);
+            break;
+        case '6':
+            await processElements(dataHoan1);
+            break;
+        case '7':
+            await processElements(dataHoan2);
+            break;
+        case '8':
+            await processElements(dataHoan3);
             break;
         default:
             break;
