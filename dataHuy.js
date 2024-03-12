@@ -234,7 +234,7 @@ const dataHuy2 = [
         apiKey: '51ctcDxAxNx4sp6frU',
         secretKey: 'Pd7aVPDILa7WHJA3Wp9mq6znallIHlFRI4eU',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27043,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -243,7 +243,7 @@ const dataHuy2 = [
         apiKey: 'HCSPRjfGZ4sidHXWMO',
         secretKey: 'WdLBeeh5jypbHmP1vZFhippKJCRpZHSew8KA',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27024,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -252,7 +252,7 @@ const dataHuy2 = [
         apiKey: 'ETcf3IvuxvMlTPcGhv',
         secretKey: 'goQGS1X2M4g0Z06ORgXhaod1WiqjvrVSOI9H',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27032,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -261,7 +261,7 @@ const dataHuy2 = [
         apiKey: 'Tft3kEKBZ1POFs3LrQ',
         secretKey: 'MyMVr2osrwGsCOmBRiw1AeqGMlXeu0yv7frn',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27034,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -272,7 +272,7 @@ const dataHuy3 = [
         apiKey: '4cdwoLpPvcqZREjgwC',
         secretKey: 'GpOKPgZ8xAs6M1JkjmdPC3MMusJTmaimrQcg',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27035,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -281,7 +281,7 @@ const dataHuy3 = [
         apiKey: 'M8jW51YdEIu25WUfC4',
         secretKey: 'YtLHcKZxxM3vZWK6H9MaEiQWdAQ8JlnDMn4P',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27039,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -290,7 +290,7 @@ const dataHuy3 = [
         apiKey: 'oXdBcSLBLbSJWZ4o2T',
         secretKey: 'btakQB4KnZL8hPek73L1wD99ohskUVumCbRW',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27041,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -299,7 +299,7 @@ const dataHuy3 = [
         apiKey: 'xvI7ZIAFbMZiZjjgG7',
         secretKey: 'yApuT9dOnx7e2bj1XusoWrkHtJ2e7r2sGPLU',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27045,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -310,7 +310,7 @@ const dataHuy4 = [
         apiKey: 'CZ40IJtKepv5waPelu',
         secretKey: '58zIHVMsubXPrZZxJDgw0dCASRwd9ZxuHyTQ',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27056,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -319,7 +319,7 @@ const dataHuy4 = [
         apiKey: 'ub2KFS2CEgqQkzwAXv',
         secretKey: '16TkpUInDqXiRqNlPF1sodUhiXuIqHd6NkQ4',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27060,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -328,7 +328,7 @@ const dataHuy4 = [
         apiKey: 'GfmOZtY8tTCf36nmC6',
         secretKey: 'pygenAHtTQcK0Elgu04nEB75oMfvsRPMJy1H',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27071,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -337,7 +337,7 @@ const dataHuy4 = [
         apiKey: 'KBRRZ4i4e6mXkvQBze',
         secretKey: 'trXOtzGDZZ5JCf7kZN08GZxDxujhBLUa7MDk',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27051,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -348,7 +348,7 @@ const dataHuy5 = [
         apiKey: 'wocJSGg2BDigsShlhA',
         secretKey: 'jYzH4kiwu9at2IKaTeLOVuEphSID3DNG8U8R',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27048,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -357,7 +357,7 @@ const dataHuy5 = [
         apiKey: 'RADbCjkxxhqvMtK4Ud',
         secretKey: '9f1VSmbByTATDXFoAbR4lPRSvBuTYhMnzDqU',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27062,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -366,7 +366,7 @@ const dataHuy5 = [
         apiKey: 'DjWUEJii55b3rDF9EV',
         secretKey: 'TEgYJLtmfkPVh91HmK3QmYpEaguuOHYlrnvD',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 27070,
             auth: { username: "user_lvidz", password: "0a1orb6e" },
         }
@@ -375,7 +375,7 @@ const dataHuy5 = [
         apiKey: 'mPZPIJAOBtsuOYSv04',
         secretKey: 'jrpVnTcK2I8xHqyCW8qCkTTHvXdw9THk6vGW',
         proxy: {
-            host: "qna03.vitechcheap.com",
+            host: "qna02.vitechcheap.com",
             port: 28052,
             auth: { username: "user_gnkogl", password: "hbwy0u7t" },
         }
