@@ -30,10 +30,10 @@ app.get('/haha', (req, res) => {
         },
         {
             proxy: {
-                host: "15.235.148.205",
-                port: 34345,
-                auth: { username: "fciq8l3v", password: "fCiQ8l3v" },
-                protocol: 'socks5'
+                host: "8.222.152.158",
+                port: 55555,
+                auth: { username: "", password: "" },
+                // protocol: 'socks5'
             },
         }
     );
@@ -56,11 +56,7 @@ app.get('/hehe', (req, res) => {
             testnet: false,
         },
         {
-            proxy: {
-                host: "qna02.vitechcheap.com",
-                port: 27070,
-                auth: { username: "user_lvidz", password: "0a1orb6e" },
-            }
+            proxy: undefined
         }
     );
     (async () => {
@@ -308,7 +304,7 @@ async function tradeCoin(client, coinName) {
 // trade coin loop
 async function tradeCoinLoop(client, coinName, volume) {
     let isContinue = true;
-    let volumeCoin = volume ? volume : 105;
+    let volumeCoin = volume ? volume : 205;
     let timeOut = true;
     let totalVolTrade = 0;
 
@@ -468,16 +464,13 @@ app.get('/tradeLoopProxySing', async (req, res) => {
 // Mua bán nhiều acc đến khi đủ volume
 app.get('/tradeLoopMul', async (req, res) => {
     const { coinName, type, volume } = req.query;
-    const trade = async (apiKey, secretKey, proxy) => {
+    const trade = async (apiKey, secretKey) => {
         const client = new RestClientV5(
             {
                 key: apiKey,
                 secret: secretKey,
                 testnet: false,
             },
-            {
-                proxy
-            }
         );
 
         await tradeCoinLoop(client, coinName, volume)
@@ -486,7 +479,7 @@ app.get('/tradeLoopMul', async (req, res) => {
     async function processElements(arrData) {
         for (const element of arrData) {
             console.log('apikey: ', element.apiKey);
-            await trade(element.apiKey, element.secretKey, element.proxy);
+            await trade(element.apiKey, element.secretKey);
         }
     }
     switch (type) {
@@ -1063,6 +1056,12 @@ app.get('/checkCoin', async (req, res) => {
             break;
         case '3':
             await processElements(dataHuy3);
+            break;
+        case '4':
+            await processElements(dataHuy4);
+            break;
+        case '5':
+            await processElements(dataHuy5);
             break;
 
         default:
