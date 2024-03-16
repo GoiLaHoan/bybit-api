@@ -325,8 +325,108 @@ async function tradeCoinLoop(client, coinName, volume) {
         await sellCoin(client, coinName);
         isContinue = await checkAndCancelAllOrders(client, coinName);
     }
+}
+
+// Buy coin LP
+async function buyCoinLP(client, coinName) {
+    let equityUSDT = null
+    const symbol = `${coinName}USDT`;
+
+    // Lấy số dư USDT ví UNIFIED
+    await client
+        .getWalletBalance({
+            accountType: 'UNIFIED',
+            coin: 'USDT',
+        })
+        .then((response) => {
+            const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng usdt đang có trong ví UNIFIED
+            equityUSDT = String(convertFloat(equity))
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+    // Mua giá Market
+    await client
+        .submitOrder({
+            category: 'spot',
+            symbol,
+            isLeverage: 1,
+            marketUnit: 'quoteCoin',
+            side: 'Buy',
+            orderType: 'Market',
+            qty: convertFloat(equityUSDT * 10),
+        })
+        .then((response) => {
+            console.log('Mua thành công');
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
+
+// Sell coin LP
+async function sellCoinLP(client, coinName) {
+    let equitySell = null
+    const symbol = `${coinName}USDT`;
+
+    // Check coin đã có trong ví chưa
+    await client
+        .getWalletBalance({
+            accountType: 'UNIFIED',
+            coin: coinName,
+        })
+        .then((response) => {
+            const equity = response.result.list[0].coin[0].walletBalance; // số lượng coin đang có trong ví
+            equitySell = String(convertFloat(equity))
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+    // Bán giá Market
+    await client
+        .submitOrder({
+            category: 'spot',
+            symbol,
+            side: 'Sell',
+            orderType: 'Market',
+            qty: equitySell, // bán hết
+            marketUnit: 'baseCoin',
+        })
+        .then((response) => {
+            console.log('Bán thành công');
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 
 }
+
+// trade coin loop LP
+async function tradeCoinLoopLP(client, coinName, volume) {
+    let isContinue = true;
+    let volumeCoin = volume ? volume : 25000;
+    let timeOut = true;
+    let totalVolTrade = 0;
+    setTimeout(() => {
+        timeOut = false; // Sau 20 giây, dừng vòng lặp
+    }, 50000); // 50 giây là 30000 miligiây
+
+    while (totalVolTrade < volumeCoin && timeOut) {
+        await buyCoinLP(client, coinName);
+        await sellCoinLP(client, coinName);
+        isContinue = await checkAndCancelAllOrders(client, coinName);
+        totalVolTrade = await totalVol(client, coinName)
+    }
+    totalVolTrade = 0;
+
+    while (isContinue && timeOut) {
+        await sellCoin(client, coinName);
+        isContinue = await checkAndCancelAllOrders(client, coinName);
+    }
+}
+
 
 // Mua bán 1 lần
 app.get('/trade', async (req, res) => {
@@ -343,7 +443,31 @@ app.get('/trade', async (req, res) => {
     await tradeCoin(client, coinName)
     // Return a success response
     res.json({ message: 'Trade executed successfully' });
+});
 
+// Mua bán đủ 25k LP
+app.get('/tradeLP', async (req, res) => {
+    const { coinName, API_KEY, API_SECRET } = req.query;
+    console.log('Bắt đầu apikey: ', API_KEY);
+    // Initialize RestClientV5 with provided credentials
+    const client = new RestClientV5({
+        key: API_KEY,
+        secret: API_SECRET,
+        testnet: false,
+    });
+
+    const startTime = Date.now(); // Lấy thời gian bắt đầu của hàm tradeCoinLoop
+
+    // Call your trade function here passing the parameters from the request body
+    await tradeCoinLoopLP(client, coinName)
+
+    const endTime = Date.now(); // Lấy thời gian kết thúc của hàm tradeCoinLoop
+    const executionTime = endTime - startTime; // Tính toán thời gian thực thi của hàm tradeCoinLoop
+    
+    console.log(`Thời gian thực thi của hàm tradeLP là ${executionTime} milliseconds.`);
+
+    // Return a success response
+    res.json({ message: 'Trade executed successfully' });
 });
 
 // trade nhiều acc 1 lần
