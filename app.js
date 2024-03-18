@@ -940,7 +940,7 @@ app.get('/sellCoinOldMul', async (req, res) => {
 
 // rút tiền để lại x$ trong ví UNIFIED
 app.get('/ruttien', async (req, res) => {
-    const { API_KEY, API_SECRET, diachiruttien } = req.query;
+    const { API_KEY, API_SECRET, diachiruttien, volume } = req.query;
 
     // Initialize RestClientV5 with provided credentials
     const client = new RestClientV5({
@@ -994,7 +994,7 @@ app.get('/ruttien', async (req, res) => {
             .createInternalTransfer(
                 transferId2,
                 'USDT',
-                '10',
+                volume ? volume : '10',
                 'FUND',
                 'UNIFIED',
             )
