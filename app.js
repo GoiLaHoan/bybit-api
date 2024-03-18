@@ -125,7 +125,7 @@ function sleep(ms) {
 async function buyCoin(client, coinName) {
     let equityUSDT = null
     let priceBuy = '0.01'
-    const symbol = `${coinName}ETH`;
+    const symbol = `${coinName}USDT`;
 
     // Lấy số dư USDT ví UNIFIED
     await client
@@ -176,7 +176,7 @@ async function buyCoin(client, coinName) {
 
 // Sell coin
 async function sellCoin(client, coinName) {
-    const symbol = `${coinName}ETH`;
+    const symbol = `${coinName}USDT`;
     let priceSell = '9999'
     let equitySell = null
 
