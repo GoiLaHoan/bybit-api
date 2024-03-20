@@ -294,7 +294,7 @@ async function totalVol(client, coinName) {
 async function tradeCoin(client, coinName) {
     let isContinue = true;
 
-    // await buyCoin(client, coinName);
+    await buyCoin(client, coinName);
     while (isContinue) {
         await sellCoin(client, coinName);
         isContinue = await checkAndCancelAllOrders(client, coinName);
