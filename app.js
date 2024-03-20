@@ -1182,7 +1182,7 @@ app.get('/checkCoin', async (req, res) => {
             await processElements(dataHuy3);
             break;
         case '4':
-            await processElements(dataHuy4);
+            await processElements(dataHoan1);
             break;
         case '5':
             await processElements(dataHuy5);
