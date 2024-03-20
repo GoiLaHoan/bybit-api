@@ -294,7 +294,7 @@ async function totalVol(client, coinName) {
 async function tradeCoin(client, coinName) {
     let isContinue = true;
 
-    await buyCoin(client, coinName);
+    // await buyCoin(client, coinName);
     while (isContinue) {
         await sellCoin(client, coinName);
         isContinue = await checkAndCancelAllOrders(client, coinName);
@@ -463,7 +463,7 @@ app.get('/tradeLP', async (req, res) => {
 
     const endTime = Date.now(); // Lấy thời gian kết thúc của hàm tradeCoinLoop
     const executionTime = endTime - startTime; // Tính toán thời gian thực thi của hàm tradeCoinLoop
-    
+
     console.log(`Thời gian thực thi của hàm tradeLP là ${executionTime} milliseconds.`);
 
     // Return a success response
