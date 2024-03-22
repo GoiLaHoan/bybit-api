@@ -268,24 +268,38 @@ async function checkAndCancelAllOrders(client, coinName) {
     return isContinue
 }
 
+
+
 // Calculate total trading volume
 async function totalVol(client, coinName) {
     const symbol = `${coinName}USDT`;
     let totalVolTrade = 0;
-    // tính tổng vol trade    
-    await client
-        .getExecutionList({
-            category: 'spot',
-            symbol: symbol,
-        })
-        .then((response) => {
-            totalVolTrade = response.result.list.reduce((acc, curr) => acc + parseFloat(curr.execValue), 0)
-            console.log(totalVolTrade);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
 
+    const a = await client.getExecutionList({
+        category: 'spot',
+        symbol: symbol,
+        limit: 100,
+    }).catch((error) => {
+        console.error(error);
+    });
+    if (!a.result.nextPageCursor) {
+        totalVolTrade = a.result.list.reduce((acc, curr) => acc + parseFloat(curr.execValue), 0);
+    }
+    else {
+        while (a.result.nextPageCursor) {
+            const b = await client.getExecutionList({
+                category: 'spot',
+                symbol: symbol,
+                limit: 100,
+                cursor: a.result.nextPageCursor,
+            }).catch((error) => {
+                console.error(error);
+            });
+            totalVolTrade += b.result.list.reduce((acc, curr) => acc + parseFloat(curr.execValue), 0);
+            a.result.nextPageCursor = b.result.nextPageCursor;
+        }
+    }
+    
     return totalVolTrade
 }
 
@@ -1196,44 +1210,18 @@ app.get('/checkCoin', async (req, res) => {
 
 });
 app.get('/checkVolTrade', async (req, res) => {
-    const { coinName, type } = req.query;
-    const check = async (apiKey, secretKey) => {
-        const client = new RestClientV5({
-            key: apiKey,
-            secret: secretKey,
-            testnet: false,
-        });
+    const { coinName, API_KEY, API_SECRET } = req.query;
 
-        // Check coin đã có trong ví chưa
-        const totalVolTrade = await totalVol(client, coinName)
-        console.log(`Tổng vol trade ${coinName} là ${totalVolTrade} - ${apiKey} `);
-    }
-    // loop
-    async function processElements(arrData) {
-        for (const element of arrData) {
-            await check(element.apiKey, element.secretKey);
-        }
-    }
-    switch (type) {
-        case '1':
-            await processElements(dataHuy1);
-            break;
-        case '2':
-            await processElements(dataHuy2);
-            break;
-        case '3':
-            await processElements(dataHuy3);
-            break;
-        case '4':
-            await processElements(dataHuy4);
-            break;
-        case '5':
-            await processElements(dataHuy5);
-            break;
+    const client = new RestClientV5({
+        key: API_KEY,
+        secret: API_SECRET,
+        testnet: false,
+    });
 
-        default:
-            break;
-    }
+    // Check coin đã có trong ví chưa
+    const totalVolTrade = await totalVol(client, coinName)
+    console.log(`Tổng vol trade ${coinName} là ${totalVolTrade} - ${API_KEY} `);
+
 
     res.json({ message: 'Check done' });
 
