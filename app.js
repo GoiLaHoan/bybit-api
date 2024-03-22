@@ -282,10 +282,10 @@ async function totalVol(client, coinName) {
     }).catch((error) => {
         console.error(error);
     });
-    if (!a.result?.nextPageCursor) {
-        totalVolTrade = a.result.list.reduce((acc, curr) => acc + parseFloat(curr.execValue), 0);
-    }
-    else {
+
+    totalVolTrade = a.result.list.reduce((acc, curr) => acc + parseFloat(curr.execValue), 0);
+
+    if (a?.result?.nextPageCursor) {
         while (a?.result?.nextPageCursor) {
             const b = await client.getExecutionList({
                 category: 'spot',
@@ -296,7 +296,10 @@ async function totalVol(client, coinName) {
                 console.error(error);
             });
             totalVolTrade += b.result.list.reduce((acc, curr) => acc + parseFloat(curr.execValue), 0);
+
+            // if (b.result.nextPageCursor) {
             a.result.nextPageCursor = b.result.nextPageCursor;
+            // }
         }
     }
     console.log(totalVolTrade);
