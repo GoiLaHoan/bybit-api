@@ -299,7 +299,7 @@ async function totalVol(client, coinName) {
             a.result.nextPageCursor = b.result.nextPageCursor;
         }
     }
-
+    console.log(totalVolTrade);
     return totalVolTrade
 }
 
