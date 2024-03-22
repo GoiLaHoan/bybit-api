@@ -282,11 +282,11 @@ async function totalVol(client, coinName) {
     }).catch((error) => {
         console.error(error);
     });
-    if (!a.result.nextPageCursor) {
+    if (!a.result?.nextPageCursor) {
         totalVolTrade = a.result.list.reduce((acc, curr) => acc + parseFloat(curr.execValue), 0);
     }
     else {
-        while (a.result.nextPageCursor) {
+        while (a?.result?.nextPageCursor) {
             const b = await client.getExecutionList({
                 category: 'spot',
                 symbol: symbol,
@@ -299,7 +299,7 @@ async function totalVol(client, coinName) {
             a.result.nextPageCursor = b.result.nextPageCursor;
         }
     }
-    
+
     return totalVolTrade
 }
 
