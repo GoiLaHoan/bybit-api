@@ -321,7 +321,7 @@ async function tradeCoin(client, coinName) {
 // trade coin loop
 async function tradeCoinLoop(client, coinName, volume) {
     let isContinue = true;
-    let volumeCoin = volume ? volume : 205;
+    let volumeCoin = volume ? volume : 202;
     let timeOut = true;
     let totalVolTrade = 0;
 
