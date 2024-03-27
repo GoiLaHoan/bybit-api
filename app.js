@@ -1165,6 +1165,10 @@ app.get('/tradeLoopMul2', async (req, res) => {
 // check coin có trong ví hay không
 app.get('/checkCoin', async (req, res) => {
     const { coinName, wallet, type } = req.query;
+
+    let count = 0;
+    let totalSCA = 0;
+
     const check = async (apiKey, secretKey) => {
         const client = new RestClientV5({
             key: apiKey,
@@ -1172,30 +1176,34 @@ app.get('/checkCoin', async (req, res) => {
             testnet: false,
         });
 
-        // Check coin đã có trong ví chưa
-        await client
-            .getAllCoinsBalance({
-                accountType: wallet, //FUND hoặc UNIFIED
+        try {
+            const response = await client.getAllCoinsBalance({
+                accountType: wallet,
                 coin: coinName,
-            })
-            .then((response) => {
-                const equity = parseFloat(response.result.balance?.[0]?.transferBalance) // số lượng coin đang có trong ví
-                // console.log('RES', response);
-                if (equity > 1) {
-                    console.log(`Có ${equity} ${coinName} trong ví ${wallet}`);
-                    console.log({ apiKey });
-                }
-            })
-            .catch((error) => {
-                console.error(error);
             });
+
+            const equity = parseFloat(response.result.balance?.[0]?.transferBalance);
+
+            if (equity > 1) {
+                count++;
+                totalSCA += equity;
+                console.log(`Có ${equity} ${coinName} trong ví ${wallet}`);
+                console.log({ apiKey });
+            }
+        } catch (error) {
+            console.error(error);
+        }
+
+        console.log('count', count);
+        console.log('totalSCA', totalSCA);
     }
-    // loop
+
     async function processElements(arrData) {
         for (const element of arrData) {
             await check(element.apiKey, element.secretKey);
         }
     }
+
     switch (type) {
         case '1':
             await processElements(dataHuy1);
@@ -1212,7 +1220,6 @@ app.get('/checkCoin', async (req, res) => {
         case '5':
             await processElements(dataHuy5);
             break;
-
         default:
             break;
     }
@@ -1220,6 +1227,8 @@ app.get('/checkCoin', async (req, res) => {
     res.json({ message: 'Check done' });
 
 });
+
+
 app.get('/checkVolTrade', async (req, res) => {
     const { coinName, API_KEY, API_SECRET } = req.query;
 
