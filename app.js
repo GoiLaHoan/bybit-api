@@ -657,8 +657,8 @@ app.get('/tradeLoopMul', async (req, res) => {
 });
 
 // bán coin
-app.get('/sellcoin', async (req, res) => {
-    const { coinName, API_KEY, API_SECRET } = req.query;
+app.get('/sellCoin', async (req, res) => {
+    const { coinName, API_KEY, API_SECRET, volume } = req.query;
     const symbol = `${coinName}USDT`;
 
     // Initialize RestClientV5 with provided credentials
@@ -677,18 +677,20 @@ app.get('/sellcoin', async (req, res) => {
         let qtyCoin = '0'
         const transferId1 = uuidv4();
         const transferId2 = uuidv4();
+        const transferId3 = uuidv4();
 
+        // kiểm tra coin có trong ví FUND
         await client
             .getAllCoinsBalance({ accountType: 'FUND', coin: coinName })
             .then((response) => {
                 console.log('response', response.result.balance[0].transferBalance);
-                qtyCoin = String(response.result.balance[0].transferBalance)
+                qtyCoin = String(response.result.balance?.[0]?.transferBalance)
             })
             .catch((error) => {
                 console.error(error);
             });
 
-        // chuyen so tien co the rut sang UNIFIED
+        // chuyen so coin đã có sang UNIFIED
         await client
             .createInternalTransfer(
                 transferId1,
@@ -698,13 +700,15 @@ app.get('/sellcoin', async (req, res) => {
                 'UNIFIED',
             )
             .then((response) => {
-                console.log('response', response);
+                console.log(`Đã chuyển ${qtyCoin} ${coinName} từ FUND sang UNIFIED`);
             })
             .catch((error) => {
                 console.error(error);
             });
 
-        // Check coin đã có trong ví chưa
+        await sleep(1000); // Chờ 1 giây
+
+        // Check coin đã có trong ví UNIFIED chưa
         await client
             .getWalletBalance({
                 accountType: 'UNIFIED',
@@ -713,37 +717,24 @@ app.get('/sellcoin', async (req, res) => {
             .then((response) => {
                 const equity = response.result.list[0].coin[0].availableToWithdraw; // số lượng coin đang có trong ví
                 equitySell = String(convertFloat(equity))
-                console.log('equity', equity);
+                console.log(`Có ${equitySell} ${coinName} trong ví UNIFIED`);
             })
             .catch((error) => {
                 console.error(error);
             });
 
-        // Lấy giá mua và giá bán gần nhất của đồng coin
-        await client
-            .getOrderbook({
-                category: 'spot',
-                symbol,
-            })
-            .then((response) => {
-                priceSell = response.result.b[0][0]; //giá bán gần nhất
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-        // Bán giá gần nhất
+        // Bán giá Market
         await client
             .submitOrder({
                 category: 'spot',
                 symbol,
                 side: 'Sell',
-                orderType: 'Limit',
+                orderType: 'Market',
                 qty: equitySell, // bán hết
-                price: priceSell,
+                marketUnit: 'baseCoin',
             })
             .then((response) => {
-                console.log(response);
+                console.log('Bán thành công');
             })
             .catch((error) => {
                 console.error(error);
@@ -777,7 +768,24 @@ app.get('/sellcoin', async (req, res) => {
                 'FUND',
             )
             .then((response) => {
-                console.log(response);
+                console.log(`Đã chuyển ${equityUNIFIEDUSDT} USDT từ UNIFIED sang FUND`);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        await sleep(2000); // Chờ 2 giây
+
+        // chuyen 10$ sang giao ngay
+        await client
+            .createInternalTransfer(
+                transferId3,
+                'USDT',
+                volume ? volume : '10',
+                'FUND',
+                'UNIFIED',
+            )
+            .then((response) => {
+                console.log('Chuyển 10$ sang UNIFIED thành công');
             })
             .catch((error) => {
                 console.error(error);
